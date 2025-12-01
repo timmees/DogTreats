@@ -1,38 +1,38 @@
-PetTreats
-
+DogTreats
 Full Stack Web Development
 Dozent: Prof. Dr. Alexander Eck
-
 Projekt von Tim Mees und Paul Jauert
-
-
-Idee: Web-App, welches ein Leckerlis-Abo für Haustiere anbietet
-Fokus auf natürliche, biologisch erzeugte Zutaten ohne künstliche Zusätze
+Idee:
+Web-App, welches ein Leckerlis-Abo für Hunde anbietet.
+Fokus auf natürliche, biologisch erzeugte Hundesnacks ohne künstliche Zusätze, hergestellt aus regionalen Zutaten und mit transparenter Herkunft.
+Abo-Produkte sind auf verschiedene Hundearten abgestimmt und bieten eine gesunde, nachhaltige und hochwertige Alternative zu industriellen Massensnacks.
 
 Target User:
-Tierbesitzer von herkömmlichen Haustieren wie Hunde, Katzen, Hamster, Fische…
-Alle Altersklassen mit Bewusstsein für Wichtigkeit von Tiernahrung sowie Herkunft
-
+Hundebesitzer aller Altersklassen, die Wert auf gesunde Tiernahrung, Bio-Qualität, lokale Herstellung sowie Nachhaltigkeit legen.
+Bewusste Konsumenten, die im Alltag wenig Zeit haben, sich intensiv mit Herkunft und Inhaltsstoffen der Hundesnacks zu beschäftigen.
 Mögliche User-Probleme:
-Vergessen: Snacks oder Futter werden erst bemerkt, wenn sie leer sind
-Zeitmangel: insb. Arbeitende Personen fehlt oft die Zeit, extra dafür einkaufen zu gehen
-Unübersichtliches Angebot: durch große Auswahl in Online-Shops, Retail-Geschäften -> Unübersichtlichkeit, Überforderung
-Fehlendes Wissen: Menge einer Mahlzeit, Inhaltsstoffe
+•⁠  ⁠Vergessen: Hundesnacks werden oft erst nachgekauft, wenn sie leer sind -> besonders hochwertige Bio-Produkte sind nicht überall verfügbar.
+•⁠  ⁠Zeitmangel: Berufstätige Personen haben selten die Zeit, gezielt gesunde und regionale Snacks auszuwählen.
+•⁠  ⁠Unübersichtliches Angebot: Online- und Offline-Shops bieten eine Flut an Produkten -> Überforderung bei der Auswahl wirklich gesunder Hundesnacks.
+•⁠  ⁠Fehlendes Wissen: Viele Hundebesitzer sind unsicher bezüglich Inhaltsstoffen, geeigneter Snack-Mengen oder Qualitätsstandards
 
-Must-have / MVP: 
-Registrierung / Login (Flask + SQLite-User-Tabelle)
-Auswahl eines Snack-Abos: (z.B. klein/mittel/groß je Tierart) 
-Produktanzeige mit Bild, kurzer Beschreibung, Preis 
-Warenkorb/ einfache Bestellseite.
-Bestellübersicht im Userbereich: 
-Aktives Abo
-Nächster Liefertermin (z. B. in 30 Tagen) 
-Möglichkeit, Abo zu pausieren oder zu kündigen 
+Must-have / MVP:
+•⁠  ⁠Registrierung / Login (Flask + SQLite-User-Tabelle)
+•⁠  ⁠Auswahl eines Hunde-Snack-Abos:
+o	Verschiedene Hunderassen
+o	Unterschiedlicher Fokus/Mengen (Alter,Gesundheitszustand)
+•⁠  ⁠Produktanzeige mit Bild, kurzer Beschreibung, Preis und Herkunft/Qualitätsangaben
+•⁠  ⁠Warenkorb / einfache Bestellseite
+•⁠  ⁠Bestellübersicht im Userbereich:
+o	Aktives Abo
+o	Nächster Liefertermin (z. B. in 30 Tagen)
+•⁠  ⁠Abo pausieren oder kündigen
 
 Nice-to-have:
-Empfehlungen aufgrund der Tierart
-Rabattaktionen / Treuepunkte
-Integration von E-Mail-Benachrichtigungen
-
-
-
+•⁠  ⁠Empfehlungen basierend auf Hundegröße, Rasse oder Bedürfnissen
+o	z. B. Sensitiv-Produkte, getreidefreie Bio-Snacks, kauintensive Snacks für große Hunde
+•⁠  ⁠Rabattaktionen / Treuepunkte für langfristige Kundentreue
+•⁠  ⁠E-Mail-Benachrichtigungen
+o	Liefererinnerung
+o	Bio-Herkunftsinfos
+o	Saisonale, regionale Snack-Varianten
