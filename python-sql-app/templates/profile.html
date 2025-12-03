@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h1>Profil</h1>
+
+    {% if username %}
+        <p>Du bist aktuell eingeloggt als <strong>{{ username }}</strong>.</p>
+        <p>
+            <a class="btn-primary" href="{{ url_for('logout') }}">Abmelden</a>
+        </p>
+    {% else %}
+        <p>
+            Melde dich an oder registriere einen neuen Benutzer, um Hunde anzulegen
+            und Abo-Modelle auf dich abzustimmen.
+        </p>
+
+        {% if message %}
+            <p style="color: darkred; margin-top: 1rem;">{{ message }}</p>
+        {% endif %}
+
+        <div class="form-row-inline" style="margin-top: 1.5rem;">
+        
+            <div style="flex: 1; background: #fff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <h2>Anmelden</h2>
+                <form method="post">
+                    <input type="hidden" name="action" value="login">
+
+                    <div class="form-row">
+                        <label for="login-username">Benutzername</label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="login-password">Passwort</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Anmelden</button>
+                </form>
+            </div>
+
+            
+            <div style="flex: 1; background: #fff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <h2>Registrieren</h2>
+                <form method="post">
+                    <input type="hidden" name="action" value="register">
+
+                    <div class="form-row">
+                        <label for="reg-username">Benutzername</label>
+                        <input type="text" id="reg-username" name="username" required>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="reg-password">Passwort (simpel)</label>
+                        <input type="password" id="reg-password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Registrieren</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

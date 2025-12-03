@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h1>Willkommen bei DogTreats</h1>
+    <p>
+        DogTreats bietet dir ein komfortables Abo für hochwertige, natürliche Hundesnacks –
+        bio, regional und ohne künstliche Zusätze.
+    </p>
+    <p>
+        Stell dir das passende Abo-Modell für deinen Hund zusammen und lass dir die Snacks
+        regelmäßig nach Hause liefern, ohne jemals wieder daran denken zu müssen nachzukaufen.
+    </p>
+    <a class="btn-primary" href="{{ url_for('plans') }}">Zu den Abo-Modellen</a>
+</section>
+{% endblock %}
