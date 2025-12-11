@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.7">
+  <diagram name="Seite-1" id="i8zKVi9MYnDLXN65qYGe">
+    <mxGraphModel dx="3132" dy="1111" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-1" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="USER" vertex="1">
+          <mxGeometry height="140" width="160" x="430" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-2" parent="-Jeebz-QrTq5NGHh9lUC-1" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;TEXT username PK&lt;br&gt;&lt;/div&gt;&lt;div&gt;TEXT email&lt;/div&gt;&lt;div&gt;TEXT password&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-3" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="DOG" vertex="1">
+          <mxGeometry height="160" width="160" x="667" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-4" parent="-Jeebz-QrTq5NGHh9lUC-3" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;INTEGER dog_id PK&lt;/div&gt;&lt;div&gt;TEXT username FK&lt;/div&gt;&lt;div&gt;TEXT name&lt;/div&gt;&lt;div&gt;TEXT breed&lt;/div&gt;&lt;div&gt;INTEGER age_years&lt;/div&gt;&lt;div&gt;INTEGER weight_kg&lt;/div&gt;&lt;div&gt;TEXT sensitivities&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-5" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="PRODUCT" vertex="1">
+          <mxGeometry height="180" width="160" x="-290" y="235" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-6" parent="-Jeebz-QrTq5NGHh9lUC-5" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;TEXT name PK&lt;/span&gt;&lt;/div&gt;&lt;div&gt;TEXT description&lt;/div&gt;&lt;div&gt;INTEGER price&lt;/div&gt;&lt;div&gt;TEXT origin&lt;/div&gt;&lt;div&gt;TEXT image_url&lt;/div&gt;&lt;div&gt;TEXT category_name FK&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-7" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="CATEGORY" vertex="1">
+          <mxGeometry height="120" width="160" x="-510" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-8" parent="-Jeebz-QrTq5NGHh9lUC-7" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="TEXT category_name PK&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-9" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="PLAN" vertex="1">
+          <mxGeometry height="180" width="160" x="-50" y="235" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-10" parent="-Jeebz-QrTq5NGHh9lUC-9" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;INTEGER plan_id PK&lt;/div&gt;&lt;div&gt;TEXT name&lt;/div&gt;&lt;div&gt;TEXT description&lt;/div&gt;&lt;div&gt;INTEGER price_per_month&lt;/div&gt;&lt;div&gt;INTEGER product_id FK&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-11" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="SUBSCRIPTION" vertex="1">
+          <mxGeometry height="150" width="160" x="160" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-12" parent="-Jeebz-QrTq5NGHh9lUC-11" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;INTEGER sub_id PK&lt;/div&gt;&lt;div&gt;TEXT username FK&lt;/div&gt;&lt;div&gt;INTEGER plan_id FK&lt;/div&gt;&lt;div&gt;TEXT start_date&lt;/div&gt;&lt;div&gt;TEXT next_delivery_date&lt;/div&gt;&lt;div&gt;TEXT status&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-13" edge="1" parent="1" source="-Jeebz-QrTq5NGHh9lUC-2" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;" target="-Jeebz-QrTq5NGHh9lUC-12" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="340" y="480" as="sourcePoint" />
+            <mxPoint x="440" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-14" edge="1" parent="1" source="-Jeebz-QrTq5NGHh9lUC-2" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;" target="-Jeebz-QrTq5NGHh9lUC-4" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="510" y="460" as="sourcePoint" />
+            <mxPoint x="400" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-15" edge="1" parent="1" source="-Jeebz-QrTq5NGHh9lUC-6" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;" target="-Jeebz-QrTq5NGHh9lUC-10" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-20" y="500" as="sourcePoint" />
+            <mxPoint x="-130" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-16" edge="1" parent="1" source="-Jeebz-QrTq5NGHh9lUC-10" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;" target="-Jeebz-QrTq5NGHh9lUC-12" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="60" y="550" as="sourcePoint" />
+            <mxPoint x="140" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-Jeebz-QrTq5NGHh9lUC-17" edge="1" parent="1" source="-Jeebz-QrTq5NGHh9lUC-8" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;" target="-Jeebz-QrTq5NGHh9lUC-6" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-400" y="470" as="sourcePoint" />
+            <mxPoint x="-320" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="74d32gN_5c1f5Xvjd3Yn-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="DogTreats&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="-10" y="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
