@@ -113,14 +113,51 @@ def plans():
         conn.commit()
         conn.close()
 
-        return redirect(url_for("plans"))
+        return redirect(url_for("create_dog"))
 
-    return render_template("plans.html")
+    return render_template("create_dog.html")
 
 
 @app.route("/plans/all")
 def plans_all():
     return render_template("plans_all.html")
+
+@app.route("/impressum")
+def impressum():
+    return render_template("impressum.html")
+
+@app.route("/kontakt")
+def kontakt():
+    return render_template("kontakt.html")
+
+@app.route("/manage_subscriptions")
+def manage_subscriptions():
+    if "username" not in session:
+        return redirect(url_for("profile"))
+    return render_template("manage_subscriptions.html")
+
+
+@app.route("/mydogs")
+def mydogs():
+    if "username" not in session:
+        return redirect(url_for("profile"))
+    return render_template("mydogs.html")
+
+
+@app.route("/track_orders")
+def track_orders():
+    if "username" not in session:
+        return redirect(url_for("profile"))
+    return render_template("track_orders.html")
+
+
+@app.route("/order_history")
+def order_history():
+    if "username" not in session:
+        return redirect(url_for("profile"))
+    return render_template("order_history.html")
+
+
 
 
 if __name__ == "__main__":
