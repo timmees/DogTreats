@@ -10,8 +10,6 @@ body {
     color: #222;
 }
 
-/* Top-Leiste */
-
 .topbar {
     display: flex;
     align-items: center;
@@ -37,7 +35,7 @@ body {
     text-decoration: underline;
 }
 
-/* Seiteninhalt */
+
 
 .content {
     max-width: 900px;
@@ -71,7 +69,6 @@ body {
     background-color: #276749;
 }
 
-/* Footer */
 
 .footer {
     text-align: center;
@@ -159,4 +156,59 @@ select {
     font-size: 0.95rem;
     color: #276749; 
     border-bottom: 1px solid #c9e6d3;
+}
+
+
+.dog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dog-card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.dog-card h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.dog-card p {
+    margin-bottom: 0.4rem;
+    line-height: 1.35;
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.product-card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.product-category {
+    font-size: 0.85rem;
+    color: #276749;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-desc {
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
 }
