@@ -141,7 +141,20 @@ def manage_subscriptions():
 def mydogs():
     if "username" not in session:
         return redirect(url_for("profile"))
-    return render_template("mydogs.html")
+
+    username = session["username"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? ORDER BY id DESC",
+        (username,)
+    )
+    dogs = cur.fetchall()
+    conn.close()
+
+    return render_template("mydogs.html", dogs=dogs)
+
 
 
 @app.route("/track_orders")
@@ -157,6 +170,22 @@ def order_history():
         return redirect(url_for("profile"))
     return render_template("order_history.html")
 
+@app.route("/all_products")
+def all_products():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT p.id, p.name, p.description, p.origin, p.quality_notes,
+               p.base_amount_g, p.base_price_eur,
+               c.name AS category_name
+        FROM products p
+        JOIN categories c ON p.category_id = c.id
+        ORDER BY c.name, p.name;
+    """)
+    products = cur.fetchall()
+    conn.close()
+
+    return render_template("all_products.html", products=products)
 
 
 
