@@ -212,3 +212,47 @@ select {
     margin-bottom: 0.75rem;
     line-height: 1.4;
 }
+
+
+.dog-select-form {
+    margin-top: 1rem;
+    max-width: 420px;
+}
+
+
+.preview-area {
+    height: 160px;
+    background: #f0f0f0;
+    border-radius: 0.4rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-placeholder {
+    color: #666;
+    font-weight: 600;
+}
+
+
+
+.btn-secondary:hover {
+    background: #e6f4ea;
+}
+
+
+.preview-area {
+    height: 160px;
+    background: #f0f0f0;
+    border-radius: 0.4rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-placeholder {
+    color: #666;
+    font-weight: 600;
+}

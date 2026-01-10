@@ -2,10 +2,139 @@
 
 {% block content %}
 <section>
-    <h1>Alle Abo-Modelle</h1>
-   
-    <p>
-        Platzhalter
-    </p>
+    <h1>Abo-Modelle</h1>
+
+    {% if not logged_in %}
+        <p>
+            Du bist aktuell nicht eingeloggt. Melde dich an, um für deinen Hund
+            passende Abo-Modelle zu erhalten.
+        </p>
+        <p>
+            <a class="btn-primary" href="{{ url_for('profile') }}">Zum Login / Registrieren</a>
+        </p>
+
+    {% elif dogs is not defined or dogs|length == 0 %}
+        <p>
+            Du bist eingeloggt, hast aber noch keinen Hund angelegt.
+            Lege zuerst deinen Hund an (Rasse, Alter, Allergien), damit wir passende Abo-Modelle vorschlagen können.
+        </p>
+        <p>
+            <a class="btn-primary" href="{{ url_for('plans') }}">Jetzt Hund erstellen</a>
+        </p>
+
+    {% else %}
+        <p>Wähle den Hund aus, für den du ein Abo-Modell zusammenstellen möchtest:</p>
+
+        <form method="post" class="dog-select-form">
+            <div class="form-row">
+                <label for="dog_id">Hund auswählen</label>
+                <select id="dog_id" name="dog_id" required>
+                    <option value="" disabled {% if not selected_dog_id %}selected{% endif %}>Bitte auswählen</option>
+                    {% for dog in dogs %}
+                        <option value="{{ dog['id'] }}"
+                            {% if selected_dog_id and selected_dog_id|string == dog['id']|string %}selected{% endif %}>
+                            {{ dog['name'] }} ({{ dog['breed'] }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary">Hund auswählen</button>
+        </form>
+
+        {% if selected_dog %}
+            <h2 style="margin-top: 1.5rem;">
+                Vorschläge für {{ selected_dog["name"] }} ({{ selected_dog["breed"] }})
+            </h2>
+
+            <div class="product-grid">
+                {% for p in plans %}
+                    <div class="product-card">
+
+                       
+                        <div class="preview-area">
+                            <div class="preview-placeholder">Vorschaubild</div>
+                        </div>
+
+                        <div class="product-category">{{ p.category_name }}</div>
+                        <h2 class="product-name">{{ p.title }}</h2>
+
+                        <p class="product-desc">{{ p.note }}</p>
+
+                        <p><strong>Produkt:</strong> {{ p.product_name }}</p>
+                        <p class="product-desc">{{ p.product_desc }}</p>
+
+                        
+                        <form method="post" action="{{ url_for('cart_add') }}" class="add-to-cart-form"
+                              data-base-amount="{{ p.base_amount_g }}"
+                              data-base-price="{{ p.base_price_eur }}"
+                              data-grams-per-day="{{ p.grams_per_day }}">
+
+                            
+                            <input type="hidden" name="dog_id" value="{{ selected_dog['id'] }}">
+                            <input type="hidden" name="dog_name" value="{{ selected_dog['name'] }}">
+                            <input type="hidden" name="plan_title" value="{{ p.title }}">
+                            <input type="hidden" name="product_name" value="{{ p.product_name }}">
+                            <input type="hidden" name="base_amount_g" value="{{ p.base_amount_g }}">
+                            <input type="hidden" name="base_price_eur" value="{{ p.base_price_eur }}">
+                            <input type="hidden" name="grams_per_day" value="{{ p.grams_per_day }}">
+
+                            
+                            <div class="form-row" style="margin-top: 0.75rem;">
+                                <label><strong>Größe</strong></label>
+                                <select class="size-days-select" name="size_days" required>
+                                    <option value="3.5">Halbe Größe (ca. 3–4 Tage)</option>
+                                    <option value="7" selected>Normalgröße (7 Tage)</option>
+                                    <option value="14">Doppelte Größe (14 Tage)</option>
+                                </select>
+                            </div>
+
+                            <p style="margin-top: 0.5rem; line-height: 1.5;">
+                                <strong>Menge:</strong> <span class="amount-out">—</span> g
+                                &nbsp;|&nbsp;
+                                <strong>Reicht:</strong> <span class="days-out">—</span> Tage
+                                &nbsp;|&nbsp;
+                                <strong>Preis:</strong> <span class="price-out">—</span> €
+                            </p>
+
+                            <button type="submit" class="btn-primary" style="margin-top:0.75rem;">
+                                In den Warenkorb
+                            </button>
+
+                            
+                        </form>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
 </section>
+
+<script>
+(function () {
+  function updateForm(form) {
+    const baseAmount = parseFloat(form.dataset.baseAmount);
+    const basePrice  = parseFloat(form.dataset.basePrice);
+    const gpd        = parseFloat(form.dataset.gramsPerDay);
+
+    const daysSelect = form.querySelector(".size-days-select");
+    const days = parseFloat(daysSelect.value);
+
+    const amount = Math.round(gpd * days);
+    const pricePerG = basePrice / baseAmount;
+    const price = pricePerG * amount;
+
+    form.querySelector(".amount-out").textContent = amount;
+    form.querySelector(".days-out").textContent = (days === 3.5 ? "3–4" : String(days));
+    form.querySelector(".price-out").textContent = price.toFixed(2);
+  }
+
+  document.querySelectorAll(".add-to-cart-form").forEach(form => {
+    const sel = form.querySelector(".size-days-select");
+    sel.addEventListener("change", () => updateForm(form));
+    updateForm(form);
+  });
+})();
+</script>
 {% endblock %}

@@ -118,9 +118,117 @@ def plans():
     return render_template("create_dog.html")
 
 
-@app.route("/plans/all")
+@app.route("/plans/all", methods=["GET", "POST"])
 def plans_all():
-    return render_template("plans_all.html")
+    # 1) Nicht eingeloggt
+    if "username" not in session:
+        return render_template("plans_all.html", logged_in=False)
+
+    username = session["username"]
+
+    # Hunde des Users laden
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? ORDER BY id DESC", (username,))
+    dogs = cur.fetchall()
+
+    selected_dog_id = None
+    selected_dog = None
+    plans = []
+
+    if request.method == "POST":
+        selected_dog_id = request.form.get("dog_id")
+
+        # Hund laden
+        cur.execute(
+            "SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? AND id = ?",
+            (username, selected_dog_id)
+        )
+        selected_dog = cur.fetchone()
+
+        if selected_dog:
+            # einfache „Verbrauchs“-Schätzung: 20g pro kg Körpergewicht pro Tag
+            # Falls Gewicht fehlt -> Default 200g/Tag
+            try:
+                w = float(selected_dog["weight_kg"]) if selected_dog["weight_kg"] is not None and str(selected_dog["weight_kg"]).strip() != "" else None
+            except:
+                w = None
+            grams_per_day = max(50, int(w * 20)) if w else 200
+
+            sensitivities = (selected_dog["sensitivities"] or "").lower()
+            wants_grainfree = "getreide" in sensitivities or "sensitiv" in sensitivities
+
+            # Produkte passend ziehen (jeweils 1 Produkt pro Modell, erstmal simpel)
+            def get_product_by_category(cat_name: str):
+                cur.execute("""
+                    SELECT p.id, p.name, p.description, p.base_amount_g, p.base_price_eur, p.image_url,
+                           c.name AS category_name
+                    FROM products p
+                    JOIN categories c ON p.category_id = c.id
+                    WHERE c.name = ?
+                    ORDER BY p.id ASC
+                    LIMIT 1;
+                """, (cat_name,))
+                return cur.fetchone()
+
+            # Modell 1: „Basis“ -> Trockenfutter (oder Sensitiv, wenn Allergie/Sensitiv)
+            prod1 = get_product_by_category("Sensitiv") if wants_grainfree else get_product_by_category("Trockenfutter")
+
+            # Modell 2: Getreidefrei
+            prod2 = get_product_by_category("Getreidefrei")
+
+            # Modell 3: Kauartikel (Snack-Paket)
+            prod3 = get_product_by_category("Kauartikel")
+
+            def build_plan(plan_id, title, product_row, note):
+                if not product_row:
+                    return None
+                return {
+                    "plan_id": plan_id,
+                    "title": title,
+                    "note": note,
+                    "product_name": product_row["name"],
+                    "product_desc": product_row["description"],
+                    "category_name": product_row["category_name"],
+                    "base_amount_g": int(product_row["base_amount_g"]),
+                    "base_price_eur": float(product_row["base_price_eur"]),
+                    "image_url": product_row["image_url"],
+                    "grams_per_day": grams_per_day,
+                }
+
+            plans = [
+                build_plan(
+                    "base",
+                    "Basis-Abo (angepasst)",
+                    prod1,
+                    f"Für {selected_dog['name']} ({selected_dog['breed']}). Empfehlung basiert auf Rasse/Grundbedarf und deinen Angaben."
+                ),
+                build_plan(
+                    "grainfree",
+                    "Getreidefrei-Abo",
+                    prod2,
+                    "Für sensible Hunde oder wenn du bewusst getreidefrei füttern möchtest."
+                ),
+                build_plan(
+                    "chew",
+                    "Kauartikel-Abo",
+                    prod3,
+                    "Für Beschäftigung und Kaubedürfnis – ideal als Ergänzung."
+                ),
+            ]
+            plans = [p for p in plans if p is not None]
+
+    conn.close()
+
+    return render_template(
+        "plans_all.html",
+        logged_in=True,
+        dogs=dogs,
+        selected_dog_id=selected_dog_id,
+        selected_dog=selected_dog,
+        plans=plans
+    )
+
 
 @app.route("/impressum")
 def impressum():
@@ -186,6 +294,50 @@ def all_products():
     conn.close()
 
     return render_template("all_products.html", products=products)
+
+@app.route("/cart")
+def cart():
+    items = session.get("cart", [])
+    return render_template("cart.html", items=items)
+
+
+@app.route("/cart/add", methods=["POST"])
+def cart_add():
+    if "username" not in session:
+        return redirect(url_for("profile"))
+
+    # Daten aus dem Formular
+    dog_id = request.form.get("dog_id")
+    dog_name = request.form.get("dog_name")
+    plan_title = request.form.get("plan_title")
+    product_name = request.form.get("product_name")
+    base_amount_g = float(request.form.get("base_amount_g"))
+    base_price_eur = float(request.form.get("base_price_eur"))
+    grams_per_day = float(request.form.get("grams_per_day"))
+
+    
+    size_days = float(request.form.get("size_days"))  
+
+    amount_g = round(grams_per_day * size_days)
+    price = (base_price_eur / base_amount_g) * amount_g
+    price = round(price, 2)
+
+    item = {
+        "dog_id": dog_id,
+        "dog_name": dog_name,
+        "plan_title": plan_title,
+        "product_name": product_name,
+        "days": size_days,
+        "amount_g": amount_g,
+        "price": price
+    }
+
+    cart_items = session.get("cart", [])
+    cart_items.append(item)
+    session["cart"] = cart_items
+
+    return redirect(url_for("cart"))
+
 
 
 

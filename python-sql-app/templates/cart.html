@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h1>Warenkorb</h1>
+
+    {% if not items or items|length == 0 %}
+        <p>Dein Warenkorb ist aktuell leer.</p>
+        <p>Gehe zu den Abo-Modellen und stelle ein Abo für einen deiner Hunde zusammen.</p>
+        <p>
+            <a class="btn-primary" href="{{ url_for('plans_all') }}">Zu den Abo-Modellen</a>
+        </p>
+    {% else %}
+        <div class="product-grid">
+            {% for it in items %}
+                <div class="product-card">
+                    <div class="product-category">Abo für {{ it.dog_name }}</div>
+                    <h2 class="product-name">{{ it.plan_title }}</h2>
+
+                    <p class="product-desc"><strong>Produkt:</strong> {{ it.product_name }}</p>
+
+                    <p>
+                        <strong>Größe:</strong>
+                        {% if it.days == 3.5 %}Halbe Größe (3–4 Tage){% elif it.days == 7 %}Normalgröße (7 Tage){% else %}Doppelte Größe (14 Tage){% endif %}
+                    </p>
+
+                    <p><strong>Menge:</strong> {{ it.amount_g }} g</p>
+                    <p><strong>Preis:</strong> {{ "%.2f"|format(it.price) }} €</p>
+
+                    <p style="margin-top:0.6rem; font-size:0.9rem; color:#666;">
+                        
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
