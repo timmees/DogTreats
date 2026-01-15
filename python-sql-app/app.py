@@ -301,6 +301,70 @@ def cart():
     return render_template("cart.html", items=items)
 
 
+@app.route("/cart/remove/<int:item_index>", methods=["POST"])
+def cart_remove(item_index):
+    items = session.get("cart", [])
+    if 0 <= item_index < len(items):
+        items.pop(item_index)
+        session["cart"] = items
+    return redirect(url_for("cart"))
+
+@app.route("/delivery_interval/<int:item_index>", methods=["GET", "POST"])
+def delivery_interval(item_index):
+    items = session.get("cart", [])
+    if not (0 <= item_index < len(items)):
+        return redirect(url_for("cart"))
+
+    item = items[item_index]
+
+    rec = item.get("days", 7)
+    try:
+        rec = float(rec)
+    except:
+        rec = 7.0
+
+    rec_days_int = 4 if rec == 3.5 else int(rec)
+
+    options = [
+        rec_days_int,
+        rec_days_int * 2,
+        rec_days_int * 4
+    ]
+
+    if request.method == "POST":
+        chosen = request.form.get("interval_days", "").strip()
+        try:
+            chosen_int = int(chosen)
+        except:
+            chosen_int = None
+
+        if chosen_int not in options:
+            return render_template(
+                "delivery_interval.html",
+                item=item,
+                item_index=item_index,
+                rec_days=rec_days_int,
+                options=options,
+                message="Bitte eine der angebotenen Optionen auswählen."
+            )
+
+        item["delivery_interval_days"] = chosen_int
+        items[item_index] = item
+        session["cart"] = items
+
+        return redirect(url_for("cart"))
+
+    return render_template(
+        "delivery_interval.html",
+        item=item,
+        item_index=item_index,
+        rec_days=rec_days_int,
+        options=options,
+        message=None
+    )
+
+
+
 @app.route("/cart/add", methods=["POST"])
 def cart_add():
     if "username" not in session:

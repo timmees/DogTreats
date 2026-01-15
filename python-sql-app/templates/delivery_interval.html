@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h1>Lieferintervall einstellen</h1>
+
+    <div class="product-card" style="margin-top:1rem;">
+        <div class="product-category">Abo für {{ item.dog_name }}</div>
+        <h2 class="product-name">{{ item.plan_title }}</h2>
+
+        <p class="product-desc"><strong>Produkt:</strong> {{ item.product_name }}</p>
+
+        <p>
+            <strong>Recommended:</strong>
+            {% if rec_days == 4 %}3–4 Tage{% else %}{{ rec_days }} Tage{% endif %}
+        </p>
+
+        <form method="post" style="margin-top:1rem;">
+            <div class="form-row">
+                <label><strong>Lieferintervall auswählen</strong></label>
+                <select name="interval_days" required>
+                    <option value="{{ options[0] }}"
+                        {% if item.delivery_interval_days == options[0] or not item.delivery_interval_days %}selected{% endif %}>
+                        Empfohlen (alle {% if options[0]==4 %}3–4{% else %}{{ options[0] }}{% endif %} Tage)
+                    </option>
+
+                    <option value="{{ options[1] }}"
+                        {% if item.delivery_interval_days == options[1] %}selected{% endif %}>
+                        alle {{ options[1] }} Tage
+                    </option>
+
+                    <option value="{{ options[2] }}"
+                        {% if item.delivery_interval_days == options[2] %}selected{% endif %}>
+                        alle {{ options[2] }} Tage
+                    </option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:0.75rem; margin-top:0.75rem; flex-wrap:wrap;">
+                <button type="submit" class="btn-primary">Auswahl bestätigen</button>
+                <a class="btn-secondary" href="{{ url_for('cart') }}">Zurück zum Warenkorb</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

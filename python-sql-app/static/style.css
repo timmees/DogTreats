@@ -242,7 +242,17 @@ select {
     font-weight: 600;
 }
 
-
+.btn-secondary {
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.4rem;
+    border: 1px solid #2f855a;
+    background: #fff;
+    color: #2f855a;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
 
 .btn-secondary:hover {
     background: #e6f4ea;
