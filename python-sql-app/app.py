@@ -86,10 +86,9 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/plans", methods=["GET", "POST"])
-def plans():
+@app.route("/create_dog", methods=["GET", "POST"])
+def create_dog():
     if request.method == "POST":
-        # Nur eingeloggte Nutzer dürfen Hunde anlegen
         if "username" not in session:
             return redirect(url_for("profile"))
 
@@ -116,6 +115,7 @@ def plans():
         return redirect(url_for("create_dog"))
 
     return render_template("create_dog.html")
+
 
 
 @app.route("/plans/all", methods=["GET", "POST"])
