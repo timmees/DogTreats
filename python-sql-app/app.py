@@ -467,6 +467,25 @@ def resume_subscription(sub_id):
     return redirect(url_for("manage_subscriptions"))
 
 
+@app.route("/subscriptions/<int:sub_id>/cancel", methods=["POST"])
+def cancel_subscription(sub_id):
+    if "username" not in session:
+        return redirect(url_for("profile"))
+
+    username = session["username"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        DELETE FROM subscriptions
+        WHERE id = ? AND username = ?
+    """, (sub_id, username))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_subscriptions"))
+
+
 
 @app.route("/cart/add", methods=["POST"])
 def cart_add():
