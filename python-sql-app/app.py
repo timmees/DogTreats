@@ -301,6 +301,18 @@ def cart():
     return render_template("cart.html", items=items)
 
 
+@app.route("/checkout")
+def checkout():
+    items = session.get("cart_items", [])
+    total = sum(it["price"] for it in items)
+
+    return render_template(
+        "checkout.html",
+        items=items,
+        total=total
+    )
+
+
 @app.route("/cart/remove/<int:item_index>", methods=["POST"])
 def cart_remove(item_index):
     items = session.get("cart", [])

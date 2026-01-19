@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Bezahlung</h1>
+
+<p>Vielen Dank für deine Bestellung!</p>
+
+<p><strong>Gesamtbetrag:</strong> {{ "%.2f"|format(total) }} €</p>
+
+<p>
+    <a href="/" class="btn-primary">Zur Startseite</a>
+</p>
+{% endblock %}
