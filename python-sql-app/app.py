@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import os   
+from datetime import date, timedelta
 
 app = Flask(__name__)
 app.secret_key = "secretkey"  
@@ -414,6 +415,56 @@ def delivery_interval(item_index):
         options=options,
         message=None
     )
+
+
+@app.route("/subscriptions/<int:sub_id>/pause", methods=["POST"])
+def pause_subscription(sub_id):
+    if "username" not in session:
+        return redirect(url_for("profile"))
+
+    username = session["username"]
+
+    pause_days_raw = request.form.get("pause_days", "14")
+
+    try:
+        pause_days = int(pause_days_raw)
+    except ValueError:
+        pause_days = 14
+
+    pause_until = date.today() + timedelta(days=pause_days)
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE subscriptions
+        SET is_paused = 1, pause_until = ?
+        WHERE id = ? AND username = ?
+    """, (pause_until.isoformat(), sub_id, username))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_subscriptions"))
+
+
+@app.route("/subscriptions/<int:sub_id>/resume")
+def resume_subscription(sub_id):
+    
+    if "username" not in session:
+        return redirect(url_for("profile"))
+
+    username = session["username"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE subscriptions
+        SET is_paused = 0, pause_until = NULL
+        WHERE id = ? AND username = ?
+    """, (sub_id, username))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_subscriptions"))
 
 
 

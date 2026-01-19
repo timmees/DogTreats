@@ -14,6 +14,31 @@
     {% else %}
         <p style="color:green;">Aktiv</p>
     {% endif %}
+
+  <form method="post" 
+      action="{{ url_for('pause_subscription', sub_id=sub.id) }}" 
+      style="margin-top:0.6rem;">
+  
+  <label 
+  for="pause_days_{{ sub.id }}"><strong>Pause:</strong>
+  </label>
+
+  <select 
+      name="pause_days" 
+      id="pause_days_{{ sub.id }}">
+      
+    <option value="7">1 Woche</option>
+    <option value="14" selected>2 Wochen</option>
+    <option value="28">4 Wochen</option>
+  </select>
+
+  <button type="submit" class="btn-secondary">Pausieren</button>
+
+  {% if sub.is_paused %}
+    <a class="btn-secondary" href="{{ url_for('resume_subscription', sub_id=sub.id) }}">Fortsetzen</a>
+  {% endif %}
+</form>
+
   </div>
 {% endfor %}
 
