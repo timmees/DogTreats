@@ -242,7 +242,22 @@ def kontakt():
 def manage_subscriptions():
     if "username" not in session:
         return redirect(url_for("profile"))
-    return render_template("manage_subscriptions.html")
+
+    username = session["username"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, dog_name, plan_title, interval_days, price, is_paused, pause_until
+        FROM subscriptions
+        WHERE username = ?
+        ORDER BY created_at DESC
+    """, (username,))
+    subscriptions = cur.fetchall()
+    conn.close()
+
+    return render_template("manage_subscriptions.html", subscriptions=subscriptions)
+
 
 
 @app.route("/mydogs")
@@ -304,13 +319,23 @@ def cart():
 @app.route("/checkout")
 def checkout():
     items = session.get("cart_items", [])
-    total = sum(it["price"] for it in items)
+    user_id = session["user_id"]
 
-    return render_template(
-        "checkout.html",
-        items=items,
-        total=total
-    )
+    for it in items:
+        db.execute("""
+            INSERT INTO subscriptions
+            (user_id, dog_name, plan_title, interval_days, price)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            user_id,
+            it["dog_name"],
+            it["plan_title"],
+            it["days"],
+            it["price"]
+        ))
+
+    session.pop("cart_items", None)
+    return redirect("/account")
 
 
 @app.route("/cart/remove/<int:item_index>", methods=["POST"])

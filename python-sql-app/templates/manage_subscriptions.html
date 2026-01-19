@@ -2,4 +2,19 @@
 
 {% block content %}
 <h1>Abos verwalten</h1>
+{% for sub in subscriptions %}
+  <div class="abo-card">
+    <h3>{{ sub.plan_title }} – {{ sub.dog_name }}</h3>
+    <p>Lieferintervall: alle {{ sub.interval_days }} Tage</p>
+
+    {% if sub.is_paused %}
+        <p style="color:red;">
+            Pausiert bis {{ sub.pause_until }}
+        </p>
+    {% else %}
+        <p style="color:green;">Aktiv</p>
+    {% endif %}
+  </div>
+{% endfor %}
+
 {% endblock %}

@@ -15,3 +15,15 @@ CREATE TABLE IF NOT EXISTS dogs (
     sensitivities TEXT,
     FOREIGN KEY (username) REFERENCES users(username)
 );
+
+CREATE TABLE subscriptions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    dog_name TEXT,
+    plan_title TEXT,
+    interval_days INTEGER,
+    price REAL,
+    is_paused INTEGER DEFAULT 0,
+    pause_until DATE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
