@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import os
 
+# Zentrale Flask-Anwendung: definiert die Web-Routen, verbindet Templates mit Logik
+# und koordiniert Datenbankzugriffe sowie Abo-, Warenkorb- und Nutzerfunktionen.
+
 from dogtreats.db import get_db_connection as _get_db_connection
 from dogtreats.services.plans_service import recommend_plans
 from dogtreats.services.cart_service import (
@@ -29,11 +32,9 @@ DB_PATH = os.path.join(BASE_DIR, "dogtreats.db")
 def get_db_connection():
     return _get_db_connection(DB_PATH)
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
@@ -68,6 +69,8 @@ def profile():
                 return redirect(url_for("index"))
 
         elif action == "login":
+            
+            # Login: Passwort mit Datenbankeintrag vergleichen
             cur.execute("SELECT password_hash FROM users WHERE username = ?", (username,))
             row = cur.fetchone()
             if row and row["password_hash"] == password:

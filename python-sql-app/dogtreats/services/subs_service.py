@@ -1,5 +1,7 @@
+#Logik für aktive Abos
 from datetime import date, timedelta
 
+#Abos des Nutzers aus DB holen, um sie in "Abos verwalten" anzuzeigen 
 def subs_list(cur, username):
     cur.execute("""
         SELECT id, dog_name, plan_title, interval_days, price, is_paused, pause_until
@@ -9,6 +11,7 @@ def subs_list(cur, username):
     """, (username,))
     return cur.fetchall()
 
+#Datensatz in subscriptions wird für jedes Warenkorb-Item angelegt
 def subs_create_from_cart(cur, username, items):
     for it in items:
         cur.execute("""

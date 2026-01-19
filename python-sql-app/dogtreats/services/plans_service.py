@@ -1,9 +1,10 @@
+#Logik für Abo-Empfehlungen
 def estimate_grams_per_day(weight_kg):
     try:
         w = float(weight_kg)
     except:
         w = None
-    return max(50, int(w * 20)) if w else 200
+    return max(50, int(w * 20)) if w else 200 #20 Gramm pro Tag pro Kg, sonst 200g/Tag
 
 
 def get_product(cur, category_name, exclude_keyword=None):
@@ -30,7 +31,7 @@ def get_product(cur, category_name, exclude_keyword=None):
         """, (category_name,))
     return cur.fetchone()
 
-
+#baut ein Abo-Objekt aus Produkt, Bild und Text, anzeigbar im Frontend
 def build_plan(plan_id, title, product, note, tags, grams_per_day):
     if not product:
         return None
@@ -152,6 +153,8 @@ def recommend_plans(cur, dog):
 
     catalog = [c for c in catalog if c]
 
+    #Auswahl basierend auf Score s
+    #Berechnet für jedes Modell einen Score ->Die 3 Abos mit dem höchsten Score werden empfohlen
     def score(p):
         s = 0
         if "getreideunverträglichkeit" in sens and "getreide" in p["tags"]:
@@ -159,7 +162,7 @@ def recommend_plans(cur, dog):
         if "empfindlicher magen" in sens and "magen" in p["tags"]:
             s += 45
         if "rind-unverträglichkeit" in sens and "rind" in p["tags"]:
-            s += 60
+            s += 60 #60= sehr wichtig
         if "huhn-unverträglichkeit" in sens and "huhn" in p["tags"]:
             s += 60
         if "fisch-unverträglichkeit" in sens and "fisch" in p["tags"]:
@@ -171,9 +174,11 @@ def recommend_plans(cur, dog):
         if is_puppy and "junior" in p["tags"]:
             s += 40
         if "base" in p["tags"]:
-            s += 10
+            s += 10 #Basis->kein wirklicher Vorteil für dieses Abo
         return s
 
     catalog.sort(key=score, reverse=True)
 
     return catalog[:3]
+
+#Beispiel: Welpe mit Rind-Unverträglichkeit ausgewählt -> Abo für Welpen bekommt +40; Abo für Rind-Unverträglichkeit bekommt+60
