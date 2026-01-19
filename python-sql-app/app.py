@@ -1,20 +1,33 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
-import os   
-from datetime import date, timedelta
+import os
+
+from dogtreats.db import get_db_connection as _get_db_connection
+from dogtreats.services.plans_service import recommend_plans
+from dogtreats.services.cart_service import (
+    cart_get,
+    cart_add_item,
+    cart_remove_item,
+    cart_clear,
+    cart_get_item,
+    cart_set_item
+)
+from dogtreats.services.subs_service import (
+    subs_list,
+    subs_create_from_cart,
+    subs_pause,
+    subs_resume,
+    subs_cancel
+)
 
 app = Flask(__name__)
-app.secret_key = "secretkey"  
-
+app.secret_key = "secretkey"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "dogtreats.db")
 
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return _get_db_connection(DB_PATH)
 
 
 @app.route("/")
@@ -28,29 +41,23 @@ def profile():
     username_in_session = session.get("username")
 
     if request.method == "POST":
-        action = request.form.get("action")  
+        action = request.form.get("action")
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
 
         if not username or not password:
             message = "Bitte Benutzername und Passwort eingeben."
-            return render_template(
-                "profile.html",
-                message=message,
-                username=username_in_session
-            )
+            return render_template("profile.html", message=message, username=username_in_session)
 
         conn = get_db_connection()
         cur = conn.cursor()
 
         if action == "register":
-            # Prüfen, ob der Benutzername schon existiert
             cur.execute("SELECT username FROM users WHERE username = ?", (username,))
             existing = cur.fetchone()
             if existing:
                 message = "Benutzername ist bereits vergeben."
             else:
-                # Passwort speichern
                 cur.execute(
                     "INSERT INTO users (username, password_hash) VALUES (?, ?)",
                     (username, password)
@@ -61,10 +68,7 @@ def profile():
                 return redirect(url_for("index"))
 
         elif action == "login":
-            cur.execute(
-                "SELECT password_hash FROM users WHERE username = ?",
-                (username,)
-            )
+            cur.execute("SELECT password_hash FROM users WHERE username = ?", (username,))
             row = cur.fetchone()
             if row and row["password_hash"] == password:
                 session["username"] = username
@@ -72,13 +76,10 @@ def profile():
                 return redirect(url_for("index"))
             else:
                 message = "Benutzername oder Passwort ist falsch."
+
         conn.close()
 
-    return render_template(
-        "profile.html",
-        message=message,
-        username=username_in_session
-    )
+    return render_template("profile.html", message=message, username=username_in_session)
 
 
 @app.route("/logout")
@@ -118,19 +119,19 @@ def create_dog():
     return render_template("create_dog.html")
 
 
-
 @app.route("/plans/all", methods=["GET", "POST"])
 def plans_all():
-    # 1) Nicht eingeloggt
     if "username" not in session:
         return render_template("plans_all.html", logged_in=False)
 
     username = session["username"]
 
-    # Hunde des Users laden
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? ORDER BY id DESC", (username,))
+    cur.execute(
+        "SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? ORDER BY id DESC",
+        (username,)
+    )
     dogs = cur.fetchall()
 
     selected_dog_id = None
@@ -140,7 +141,6 @@ def plans_all():
     if request.method == "POST":
         selected_dog_id = request.form.get("dog_id")
 
-        # Hund laden
         cur.execute(
             "SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? AND id = ?",
             (username, selected_dog_id)
@@ -148,76 +148,7 @@ def plans_all():
         selected_dog = cur.fetchone()
 
         if selected_dog:
-            # einfache „Verbrauchs“-Schätzung: 20g pro kg Körpergewicht pro Tag
-            # Falls Gewicht fehlt -> Default 200g/Tag
-            try:
-                w = float(selected_dog["weight_kg"]) if selected_dog["weight_kg"] is not None and str(selected_dog["weight_kg"]).strip() != "" else None
-            except:
-                w = None
-            grams_per_day = max(50, int(w * 20)) if w else 200
-
-            sensitivities = (selected_dog["sensitivities"] or "").lower()
-            wants_grainfree = "getreide" in sensitivities or "sensitiv" in sensitivities
-
-            # Produkte passend ziehen (jeweils 1 Produkt pro Modell, erstmal simpel)
-            def get_product_by_category(cat_name: str):
-                cur.execute("""
-                    SELECT p.id, p.name, p.description, p.base_amount_g, p.base_price_eur, p.image_url,
-                           c.name AS category_name
-                    FROM products p
-                    JOIN categories c ON p.category_id = c.id
-                    WHERE c.name = ?
-                    ORDER BY p.id ASC
-                    LIMIT 1;
-                """, (cat_name,))
-                return cur.fetchone()
-
-            # Modell 1: „Basis“ -> Trockenfutter (oder Sensitiv, wenn Allergie/Sensitiv)
-            prod1 = get_product_by_category("Sensitiv") if wants_grainfree else get_product_by_category("Trockenfutter")
-
-            # Modell 2: Getreidefrei
-            prod2 = get_product_by_category("Getreidefrei")
-
-            # Modell 3: Kauartikel (Snack-Paket)
-            prod3 = get_product_by_category("Kauartikel")
-
-            def build_plan(plan_id, title, product_row, note):
-                if not product_row:
-                    return None
-                return {
-                    "plan_id": plan_id,
-                    "title": title,
-                    "note": note,
-                    "product_name": product_row["name"],
-                    "product_desc": product_row["description"],
-                    "category_name": product_row["category_name"],
-                    "base_amount_g": int(product_row["base_amount_g"]),
-                    "base_price_eur": float(product_row["base_price_eur"]),
-                    "image_url": product_row["image_url"],
-                    "grams_per_day": grams_per_day,
-                }
-
-            plans = [
-                build_plan(
-                    "base",
-                    "Basis-Abo (angepasst)",
-                    prod1,
-                    f"Für {selected_dog['name']} ({selected_dog['breed']}). Empfehlung basiert auf Rasse/Grundbedarf und deinen Angaben."
-                ),
-                build_plan(
-                    "grainfree",
-                    "Getreidefrei-Abo",
-                    prod2,
-                    "Für sensible Hunde oder wenn du bewusst getreidefrei füttern möchtest."
-                ),
-                build_plan(
-                    "chew",
-                    "Kauartikel-Abo",
-                    prod3,
-                    "Für Beschäftigung und Kaubedürfnis – ideal als Ergänzung."
-                ),
-            ]
-            plans = [p for p in plans if p is not None]
+            plans = recommend_plans(cur, selected_dog)
 
     conn.close()
 
@@ -235,9 +166,11 @@ def plans_all():
 def impressum():
     return render_template("impressum.html")
 
+
 @app.route("/kontakt")
 def kontakt():
     return render_template("kontakt.html")
+
 
 @app.route("/manage_subscriptions")
 def manage_subscriptions():
@@ -248,17 +181,10 @@ def manage_subscriptions():
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT id, dog_name, plan_title, interval_days, price, is_paused, pause_until
-        FROM subscriptions
-        WHERE username = ?
-        ORDER BY created_at DESC
-    """, (username,))
-    subscriptions = cur.fetchall()
+    subscriptions = subs_list(cur, username)
     conn.close()
 
     return render_template("manage_subscriptions.html", subscriptions=subscriptions)
-
 
 
 @app.route("/mydogs")
@@ -280,7 +206,6 @@ def mydogs():
     return render_template("mydogs.html", dogs=dogs)
 
 
-
 @app.route("/track_orders")
 def track_orders():
     if "username" not in session:
@@ -293,6 +218,7 @@ def order_history():
     if "username" not in session:
         return redirect(url_for("profile"))
     return render_template("order_history.html")
+
 
 @app.route("/all_products")
 def all_products():
@@ -311,64 +237,56 @@ def all_products():
 
     return render_template("all_products.html", products=products)
 
+
 @app.route("/cart")
 def cart():
-    items = session.get("cart", [])
+    items = cart_get(session)
     return render_template("cart.html", items=items)
 
 
-@app.route("/checkout")
-def checkout():
+@app.route("/cart/add", methods=["POST"])
+def cart_add():
     if "username" not in session:
         return redirect(url_for("profile"))
 
-    username = session["username"]
-    items = session.get("cart", [])
+    dog_id = request.form.get("dog_id")
+    dog_name = request.form.get("dog_name")
+    plan_title = request.form.get("plan_title")
+    product_name = request.form.get("product_name")
+    base_amount_g = float(request.form.get("base_amount_g"))
+    base_price_eur = float(request.form.get("base_price_eur"))
+    grams_per_day = float(request.form.get("grams_per_day"))
+    size_days = float(request.form.get("size_days"))
 
-    if not items:
-        return redirect(url_for("cart"))
-    
-    
-    conn = get_db_connection()
-    cur = conn.cursor()
+    amount_g = round(grams_per_day * size_days)
+    price = (base_price_eur / base_amount_g) * amount_g
+    price = round(price, 2)
 
-    for it in items:
-        cur.execute("""
-            INSERT INTO subscriptions
-            (username, dog_name, plan_title, interval_days, price)
-            VALUES (?, ?, ?, ?, ?)
-        """, (
-            username,
-            it["dog_name"],
-            it["plan_title"],
-            it["days"],        # Lieferintervall
-            it["price"]
-        ))
+    item = {
+        "dog_id": dog_id,
+        "dog_name": dog_name,
+        "plan_title": plan_title,
+        "product_name": product_name,
+        "days": size_days,
+        "amount_g": amount_g,
+        "price": price
+    }
 
-    conn.commit()
-    conn.close()
-
-    session.pop("cart", None)  # Warenkorb leeren
-
-    return redirect(url_for("manage_subscriptions"))
-
+    cart_add_item(session, item)
+    return redirect(url_for("cart"))
 
 
 @app.route("/cart/remove/<int:item_index>", methods=["POST"])
 def cart_remove(item_index):
-    items = session.get("cart", [])
-    if 0 <= item_index < len(items):
-        items.pop(item_index)
-        session["cart"] = items
+    cart_remove_item(session, item_index)
     return redirect(url_for("cart"))
+
 
 @app.route("/delivery_interval/<int:item_index>", methods=["GET", "POST"])
 def delivery_interval(item_index):
-    items = session.get("cart", [])
-    if not (0 <= item_index < len(items)):
+    item = cart_get_item(session, item_index)
+    if item is None:
         return redirect(url_for("cart"))
-
-    item = items[item_index]
 
     rec = item.get("days", 7)
     try:
@@ -402,9 +320,7 @@ def delivery_interval(item_index):
             )
 
         item["delivery_interval_days"] = chosen_int
-        items[item_index] = item
-        session["cart"] = items
-
+        cart_set_item(session, item_index, item)
         return redirect(url_for("cart"))
 
     return render_template(
@@ -417,29 +333,43 @@ def delivery_interval(item_index):
     )
 
 
+@app.route("/checkout")
+def checkout():
+    if "username" not in session:
+        return redirect(url_for("profile"))
+
+    username = session["username"]
+    items = cart_get(session)
+
+    if not items:
+        return redirect(url_for("cart"))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    subs_create_from_cart(cur, username, items)
+    conn.commit()
+    conn.close()
+
+    cart_clear(session)
+    return redirect(url_for("manage_subscriptions"))
+
+
 @app.route("/subscriptions/<int:sub_id>/pause", methods=["POST"])
 def pause_subscription(sub_id):
     if "username" not in session:
         return redirect(url_for("profile"))
 
     username = session["username"]
-
     pause_days_raw = request.form.get("pause_days", "14")
 
     try:
         pause_days = int(pause_days_raw)
-    except ValueError:
+    except:
         pause_days = 14
-
-    pause_until = date.today() + timedelta(days=pause_days)
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("""
-        UPDATE subscriptions
-        SET is_paused = 1, pause_until = ?
-        WHERE id = ? AND username = ?
-    """, (pause_until.isoformat(), sub_id, username))
+    subs_pause(cur, username, sub_id, pause_days)
     conn.commit()
     conn.close()
 
@@ -448,7 +378,6 @@ def pause_subscription(sub_id):
 
 @app.route("/subscriptions/<int:sub_id>/resume")
 def resume_subscription(sub_id):
-    
     if "username" not in session:
         return redirect(url_for("profile"))
 
@@ -456,11 +385,7 @@ def resume_subscription(sub_id):
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("""
-        UPDATE subscriptions
-        SET is_paused = 0, pause_until = NULL
-        WHERE id = ? AND username = ?
-    """, (sub_id, username))
+    subs_resume(cur, username, sub_id)
     conn.commit()
     conn.close()
 
@@ -476,55 +401,11 @@ def cancel_subscription(sub_id):
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("""
-        DELETE FROM subscriptions
-        WHERE id = ? AND username = ?
-    """, (sub_id, username))
+    subs_cancel(cur, username, sub_id)
     conn.commit()
     conn.close()
 
     return redirect(url_for("manage_subscriptions"))
-
-
-
-@app.route("/cart/add", methods=["POST"])
-def cart_add():
-    if "username" not in session:
-        return redirect(url_for("profile"))
-
-    # Daten aus dem Formular
-    dog_id = request.form.get("dog_id")
-    dog_name = request.form.get("dog_name")
-    plan_title = request.form.get("plan_title")
-    product_name = request.form.get("product_name")
-    base_amount_g = float(request.form.get("base_amount_g"))
-    base_price_eur = float(request.form.get("base_price_eur"))
-    grams_per_day = float(request.form.get("grams_per_day"))
-
-    
-    size_days = float(request.form.get("size_days"))  
-
-    amount_g = round(grams_per_day * size_days)
-    price = (base_price_eur / base_amount_g) * amount_g
-    price = round(price, 2)
-
-    item = {
-        "dog_id": dog_id,
-        "dog_name": dog_name,
-        "plan_title": plan_title,
-        "product_name": product_name,
-        "days": size_days,
-        "amount_g": amount_g,
-        "price": price
-    }
-
-    cart_items = session.get("cart", [])
-    cart_items.append(item)
-    session["cart"] = cart_items
-
-    return redirect(url_for("cart"))
-
-
 
 
 if __name__ == "__main__":

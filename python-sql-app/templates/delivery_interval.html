@@ -15,6 +15,10 @@
             {% if rec_days == 4 %}3–4 Tage{% else %}{{ rec_days }} Tage{% endif %}
         </p>
 
+        {% if message %}
+            <p style="color: darkred; margin-top: 0.75rem;">{{ message }}</p>
+        {% endif %}
+
         <form method="post" style="margin-top:1rem;">
             <div class="form-row">
                 <label><strong>Lieferintervall auswählen</strong></label>
@@ -26,12 +30,12 @@
 
                     <option value="{{ options[1] }}"
                         {% if item.delivery_interval_days == options[1] %}selected{% endif %}>
-                        alle {{ options[1] }} Tage
+                        2× empfohlen (alle {{ options[1] }} Tage)
                     </option>
 
                     <option value="{{ options[2] }}"
                         {% if item.delivery_interval_days == options[2] %}selected{% endif %}>
-                        alle {{ options[2] }} Tage
+                        4× empfohlen (alle {{ options[2] }} Tage)
                     </option>
                 </select>
             </div>

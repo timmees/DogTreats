@@ -30,7 +30,7 @@
                     <p>
                         <strong>Lieferintervall:</strong>
                         {% if it.delivery_interval_days %}
-                            alle {{ it.delivery_interval_days }} Tage
+                            {% if it.delivery_interval_days == 4 %}alle 3–4 Tage{% else %}alle {{ it.delivery_interval_days }} Tage{% endif %}
                         {% else %}
                             noch nicht festgelegt
                         {% endif %}
@@ -46,15 +46,9 @@
                         </form>
                     </div>
 
-                    <div style="margin-top:2rem; text-align:right;">
-                        <a href="{{ url_for('checkout') }}"
-                           class="btn-primary"
-                           style="text-decoration:none;">
-                            Jetzt bezahlen
-                        </a>
-                    </div>
-
-
+                    <p style="margin-top:0.75rem;">
+                        <a class="btn-primary" href="{{ url_for('checkout') }}">Abo bestätigen</a>
+                    </p>
                 </div>
             {% endfor %}
         </div>
