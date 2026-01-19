@@ -318,24 +318,39 @@ def cart():
 
 @app.route("/checkout")
 def checkout():
-    items = session.get("cart_items", [])
-    user_id = session["user_id"]
+    if "username" not in session:
+        return redirect(url_for("profile"))
+
+    username = session["username"]
+    items = session.get("cart", [])
+
+    if not items:
+        return redirect(url_for("cart"))
+    
+    
+    conn = get_db_connection()
+    cur = conn.cursor()
 
     for it in items:
-        db.execute("""
+        cur.execute("""
             INSERT INTO subscriptions
-            (user_id, dog_name, plan_title, interval_days, price)
+            (username, dog_name, plan_title, interval_days, price)
             VALUES (?, ?, ?, ?, ?)
         """, (
-            user_id,
+            username,
             it["dog_name"],
             it["plan_title"],
-            it["days"],
+            it["days"],        # Lieferintervall
             it["price"]
         ))
 
-    session.pop("cart_items", None)
-    return redirect("/account")
+    conn.commit()
+    conn.close()
+
+    session.pop("cart", None)  # Warenkorb leeren
+
+    return redirect(url_for("manage_subscriptions"))
+
 
 
 @app.route("/cart/remove/<int:item_index>", methods=["POST"])

@@ -8,6 +8,7 @@
 <p><strong>Gesamtbetrag:</strong> {{ "%.2f"|format(total) }} €</p>
 
 <p>
-    <a href="/" class="btn-primary">Zur Startseite</a>
+    <a href="{{ url_for('checkout') }}" class="btn-primary">Jetzt bezahlen</a>
+
 </p>
 {% endblock %}
