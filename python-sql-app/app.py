@@ -4,6 +4,7 @@ import os
 # Zentrale Flask-Anwendung: definiert die Web-Routen, verbindet Templates mit Logik
 # und koordiniert Datenbankzugriffe sowie Abo-, Warenkorb- und Nutzerfunktionen.
 
+#Importe von Funktionen aus anderen Dateien
 from dogtreats.db import get_db_connection as _get_db_connection
 from dogtreats.services.plans_service import recommend_plans
 from dogtreats.services.cart_service import (
@@ -23,7 +24,7 @@ from dogtreats.services.subs_service import (
 )
 
 app = Flask(__name__)
-app.secret_key = "secretkey"
+app.secret_key = "secretkey" #für Sessions, aus Flask
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "dogtreats.db")
@@ -32,6 +33,7 @@ DB_PATH = os.path.join(BASE_DIR, "dogtreats.db")
 def get_db_connection():
     return _get_db_connection(DB_PATH)
 
+#Ab hier: Routes auf templates + Backend Logik
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -51,8 +53,9 @@ def profile():
             return render_template("profile.html", message=message, username=username_in_session)
 
         conn = get_db_connection()
-        cur = conn.cursor()
+        cur = conn.cursor() #cursor liest DB-Abfragen
 
+        #User registrieren sofern dieser noch nicht existiert
         if action == "register":
             cur.execute("SELECT username FROM users WHERE username = ?", (username,))
             existing = cur.fetchone()
@@ -97,8 +100,10 @@ def create_dog():
         if "username" not in session:
             return redirect(url_for("profile"))
 
+        #Benutzer aus Session lesen
         username = session["username"]
 
+        #Eingabedaten aus Formular zum Anlegen eines Hundes
         dog_name = request.form.get("name")
         breed = request.form.get("breed")
         age_years = request.form.get("age_years")
@@ -135,11 +140,12 @@ def plans_all():
         "SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? ORDER BY id DESC",
         (username,)
     )
+    #holt alle passenden Hunde eines Users (letzte SQL Select)
     dogs = cur.fetchall()
 
     selected_dog_id = None
     selected_dog = None
-    plans = []
+    plans = [] #leere Liste, später kommen 3 empfohlende Abos rein
 
     if request.method == "POST":
         selected_dog_id = request.form.get("dog_id")
@@ -148,13 +154,14 @@ def plans_all():
             "SELECT id, name, breed, age_years, weight_kg, sensitivities FROM dogs WHERE username = ? AND id = ?",
             (username, selected_dog_id)
         )
-        selected_dog = cur.fetchone()
+        selected_dog = cur.fetchone() #=letzter SQL-Select
 
         if selected_dog:
             plans = recommend_plans(cur, selected_dog)
 
     conn.close()
 
+    #Variablen ans Template übergeben
     return render_template(
         "plans_all.html",
         logged_in=True,
@@ -256,7 +263,7 @@ def cart_add():
     dog_name = request.form.get("dog_name")
     plan_title = request.form.get("plan_title")
     product_name = request.form.get("product_name")
-    base_amount_g = float(request.form.get("base_amount_g"))
+    base_amount_g = float(request.form.get("base_amount_g")) #float wegen 3,5 Tagen
     base_price_eur = float(request.form.get("base_price_eur"))
     grams_per_day = float(request.form.get("grams_per_day"))
     size_days = float(request.form.get("size_days"))
@@ -291,14 +298,15 @@ def delivery_interval(item_index):
     if item is None:
         return redirect(url_for("cart"))
 
-    rec = item.get("days", 7)
+    rec = item.get("days", 7) #nutze Wert von days, wenn dieser nicht existiert -> Default = 7
     try:
-        rec = float(rec)
+        rec = float(rec) #sicherstellen, dass rec ein float ist für 3,5 und Strings
     except:
         rec = 7.0
 
     rec_days_int = 4 if rec == 3.5 else int(rec)
 
+    #Intervall kann auf die 2-oder 4-fache Länge eingestellt werden
     options = [
         rec_days_int,
         rec_days_int * 2,
@@ -306,29 +314,19 @@ def delivery_interval(item_index):
     ]
 
     if request.method == "POST":
-        chosen = request.form.get("interval_days", "").strip()
-        try:
-            chosen_int = int(chosen)
-        except:
-            chosen_int = None
+        chosen_int = int(request.form.get("interval_days")) #Interval Days werden zu int
 
         if chosen_int not in options:
-            return render_template(
-                "delivery_interval.html",
-                item=item,
-                item_index=item_index,
-                rec_days=rec_days_int,
-                options=options,
-                message="Bitte eine der angebotenen Optionen auswählen."
-            )
+            return redirect(url_for("cart"))
 
         item["delivery_interval_days"] = chosen_int
         cart_set_item(session, item_index, item)
         return redirect(url_for("cart"))
 
+    #Variablen ans Template übergeben
     return render_template(
         "delivery_interval.html",
-        item=item,
+        item=item, 
         item_index=item_index,
         rec_days=rec_days_int,
         options=options,
@@ -363,12 +361,7 @@ def pause_subscription(sub_id):
         return redirect(url_for("profile"))
 
     username = session["username"]
-    pause_days_raw = request.form.get("pause_days", "14")
-
-    try:
-        pause_days = int(pause_days_raw)
-    except:
-        pause_days = 14
+    pause_days = int(request.form.get("pause_days", 14))
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -377,6 +370,7 @@ def pause_subscription(sub_id):
     conn.close()
 
     return redirect(url_for("manage_subscriptions"))
+
 
 
 @app.route("/subscriptions/<int:sub_id>/resume")
@@ -411,5 +405,5 @@ def cancel_subscription(sub_id):
     return redirect(url_for("manage_subscriptions"))
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == "__main__": #app kann gestartet werden
+    app.run(debug=True) #zeigt Fehlermeldungen im Browser
