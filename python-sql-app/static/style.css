@@ -273,3 +273,12 @@ select {
     color: #666;
     font-weight: 600;
 }
+
+.hero-image {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 30px 0;
+}
+
