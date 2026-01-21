@@ -9,7 +9,7 @@ def subs_list(cur, username):
         WHERE username = ?
         ORDER BY created_at DESC
     """, (username,))
-    return cur.fetchall()
+    return cur.fetchall() #ruft alle Datensätze eines Datenbankafrageergebnisses ab und gibt diese als Liste zurück
 
 #Datensatz in subscriptions wird für jedes Warenkorb-Item angelegt
 def subs_create_from_cart(cur, username, items):

@@ -8,22 +8,22 @@
         
     </p>
 
-    {% if products and products|length > 0 %}
-        <div class="product-grid">
+    {% if products and products|length > 0 %} <!--aus SQL Liste-->
+        <div class="product-grid"> 
             {% for p in products %}
                 <div class="product-card">
                     <div class="product-top">
-                        <div class="product-category">{{ p["category_name"] }}</div>
+                        <div class="product-category">{{ p["category_name"] }}</div><!--in Klammern wird im HTML angezeigt-->
                         <h2 class="product-name">{{ p["name"] }}</h2>
                     </div>
 
                     <p class="product-desc">{{ p["description"] }}</p>
 
                     <p><strong>Standardgröße:</strong> {{ p["base_amount_g"] }} g</p>
-                    <p><strong>Preis:</strong> {{ "%.2f"|format(p["base_price_eur"]) }} €</p>
+                    <p><strong>Preis:</strong> {{ "%.2f"|format(p["base_price_eur"]) }} €</p><!--Jinja Format für Geldanzeige-->
 
                     <p><strong>Herkunft:</strong> {{ p["origin"] or "—" }}</p>
-                    <p><strong>Qualität:</strong> {{ p["quality_notes"] or "—" }}</p>
+                    <p><strong>Qualität:</strong> {{ p["quality_notes"] or "—" }}</p><!--kann auch leer sein-->
                 </div>
             {% endfor %}
         </div>
