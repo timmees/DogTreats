@@ -122,9 +122,9 @@ def create_dog():
         conn.commit()
         conn.close()
 
-        return redirect(url_for("create_dog"))
+        return redirect(url_for("create_dog")) #Nach dem Anlegen des Hundes zurück zum Formular 
 
-    return render_template("create_dog.html")
+    return render_template("create_dog.html") # rendert das Formular und schickt es an den Browser
 
 
 @app.route("/plans/all", methods=["GET", "POST"])
