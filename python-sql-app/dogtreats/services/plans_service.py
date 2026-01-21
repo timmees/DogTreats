@@ -177,8 +177,8 @@ def recommend_plans(cur, dog):
             s += 10 #Basis->kein wirklicher Vorteil für dieses Abo
         return s
 
-    catalog.sort(key=score, reverse=True)
+    catalog.sort(key=score, reverse=True) #sortiere nach Score absteigend
 
-    return catalog[:3]
+    return catalog[:3] #Gib die 3 besten Abos zurück
 
 #Beispiel: Welpe mit Rind-Unverträglichkeit ausgewählt -> Abo für Welpen bekommt +40; Abo für Rind-Unverträglichkeit bekommt+60
