@@ -104,7 +104,7 @@ def create_dog():
         username = session["username"]
 
         #Eingabedaten aus Formular zum Anlegen eines Hundes
-        dog_name = request.form.get("name")
+        dog_name = request.form.get("name") # durch get kein Fehler wenn NULL
         breed = request.form.get("breed")
         age_years = request.form.get("age_years")
         weight_kg = request.form.get("weight_kg")
@@ -268,9 +268,9 @@ def cart_add():
     grams_per_day = float(request.form.get("grams_per_day"))
     size_days = float(request.form.get("size_days"))
 
-    amount_g = round(grams_per_day * size_days)
-    price = (base_price_eur / base_amount_g) * amount_g
-    price = round(price, 2)
+    amount_g = round(grams_per_day * size_days) #Gesamtmenge in Gramm
+    price = (base_price_eur / base_amount_g) * amount_g #Preis berechnen
+    price = round(price, 2) #auf 2 Nachkommastellen runden
 
     item = {
         "dog_id": dog_id,
@@ -282,8 +282,8 @@ def cart_add():
         "price": price
     }
 
-    cart_add_item(session, item)
-    return redirect(url_for("cart"))
+    cart_add_item(session, item) #Item zum Warenkorb hinzufügen
+    return redirect(url_for("cart")) 
 
 
 @app.route("/cart/remove/<int:item_index>", methods=["POST"])
