@@ -1,14 +1,10 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>Bezahlung</h1>
-
-<p>Vielen Dank für deine Bestellung!</p>
+<h1>Checkout</h1>
 
 <p><strong>Gesamtbetrag:</strong> {{ "%.2f"|format(total) }} €</p>
 
-<p>
-    <a href="{{ url_for('checkout') }}" class="btn-primary">Jetzt bezahlen</a>
-
-</p>
+<form method="post">
+  <button class="btn-primary" type="submit">Jetzt bestätigen</button>
+</form>
 {% endblock %}

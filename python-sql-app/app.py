@@ -334,25 +334,29 @@ def delivery_interval(item_index):
     )
 
 
-@app.route("/checkout")
+@app.route("/checkout", methods=["GET", "POST"])
 def checkout():
     if "username" not in session:
         return redirect(url_for("profile"))
 
-    username = session["username"]
     items = cart_get(session)
-
     if not items:
         return redirect(url_for("cart"))
 
-    conn = get_db_connection()
-    cur = conn.cursor()
-    subs_create_from_cart(cur, username, items)
-    conn.commit()
-    conn.close()
+    total = sum(float(it["price"]) for it in items)
 
-    cart_clear(session)
-    return redirect(url_for("manage_subscriptions"))
+    if request.method == "POST":
+        username = session["username"]
+        conn = get_db_connection()
+        cur = conn.cursor()
+        subs_create_from_cart(cur, username, items)
+        conn.commit()
+        conn.close()
+        cart_clear(session)
+        return redirect(url_for("manage_subscriptions"))
+
+    return render_template("checkout.html", items=items, total=total)
+
 
 
 @app.route("/subscriptions/<int:sub_id>/pause", methods=["POST"])
