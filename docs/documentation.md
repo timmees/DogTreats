@@ -1,4 +1,4 @@
-# Dokumentation und Ressourcen – Projekt „PetTreats“
+# Dokumentation und Ressourcen – Projekt „DogTreats“
 
 ## **13.11.2025**
 - Erste Ideenbesprechung und Brainstorming
@@ -13,7 +13,8 @@
 ---
 
 ## **24.11.2025**
-- Konkretisierung der Projektidee: Spezialisierung auf **Hundefutter und Ernährungspläne**
+- Konkretisierung der Projektidee: Spezialisierung auf Hundefutter und Ernährungspläne
+- Umbenennung auf "DogTreats"
 
 ---
 
@@ -52,3 +53,4 @@
 
 **Genutzte Ressourcen:**
 - [HTML Styles – CSS](https://www.w3schools.com/html/html_css.asp) – W3Schools, letzter Zugriff: 03.12.2025
+
