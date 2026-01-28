@@ -72,6 +72,7 @@ sqlite3 dogtreats.db < seed_products.sql
 python app.py
 ```md
 Open in browser: http://127.0.0.1:5000
+```
 ---
 ## Database Structure
 
@@ -108,4 +109,5 @@ The recommendation system selects suitable products and calculates:
 - Payment system integration  
 - Email notifications for deliveries  
 - Advanced nutrition recommendations
+
 
