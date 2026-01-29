@@ -1,3 +1,4 @@
+-- NICHT mehr nötig für Betrieb der Applikation, da Daten schon in DB sind! Nur für Doku relevant
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS categories (
