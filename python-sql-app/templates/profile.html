@@ -5,15 +5,53 @@
     <h1>Profil</h1>
 
     {% if username %}
-        
+
+        <p>
+            Hier kannst du deine Abos, Hunde und Bestellungen verwalten.
+        </p>
+
         <p>
             <a class="btn-primary" href="{{ url_for('logout') }}">Abmelden</a>
         </p>
-        <p><a href="{{ url_for('manage_subscriptions') }}">Abos verwalten</a></p>
-        <p><a href="{{ url_for('mydogs') }}">Erstellte Hunde ansehen</a></p>
-        <p><a href="{{ url_for('track_orders') }}">Bestellungen verfolgen</a></p>
-        <p><a href="{{ url_for('order_history') }}">Bestellhistorie</a></p>
+
+        <div class="product-grid" style="margin-top:1.5rem;">
+
+            <div class="product-card">
+                <h2>Abos verwalten</h2>
+                <p>Aktive Abos ansehen, pausieren oder kündigen.</p>
+                <a class="btn-primary" href="{{ url_for('manage_subscriptions') }}">
+                    Zu meinen Abos
+                </a>
+            </div>
+
+            <div class="product-card">
+                <h2>Meine Hunde</h2>
+                <p>Alle angelegten Hunde ansehen und verwalten.</p>
+                <a class="btn-primary" href="{{ url_for('mydogs') }}">
+                    Hunde anzeigen
+                </a>
+            </div>
+
+            <div class="product-card">
+                <h2>Bestellungen verfolgen</h2>
+                <p>Status aktueller Bestellungen prüfen.</p>
+                <a class="btn-primary" href="{{ url_for('track_orders') }}">
+                    Bestellungen verfolgen
+                </a>
+            </div>
+
+            <div class="product-card">
+                <h2>Bestellhistorie</h2>
+                <p>Vergangene Bestellungen einsehen.</p>
+                <a class="btn-primary" href="{{ url_for('order_history') }}">
+                    Historie ansehen
+                </a>
+            </div>
+
+        </div>
+
     {% else %}
+
         <p>
             Melde dich an oder registriere einen neuen Benutzer, um Hunde anzulegen
             und Abo-Modelle auf dich abzustimmen.
@@ -24,9 +62,10 @@
         {% endif %}
 
         <div class="form-row-inline" style="margin-top: 1.5rem;">
-        
-            <div style="flex: 1; background: #fff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+
+            <div class="product-card" style="flex:1;">
                 <h2>Anmelden</h2>
+
                 <form method="post">
                     <input type="hidden" name="action" value="login">
 
@@ -44,9 +83,9 @@
                 </form>
             </div>
 
-            
-            <div style="flex: 1; background: #fff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+            <div class="product-card" style="flex:1;">
                 <h2>Registrieren</h2>
+
                 <form method="post">
                     <input type="hidden" name="action" value="register">
 
@@ -63,7 +102,9 @@
                     <button type="submit" class="btn-primary">Registrieren</button>
                 </form>
             </div>
+
         </div>
+
     {% endif %}
 </section>
 {% endblock %}
