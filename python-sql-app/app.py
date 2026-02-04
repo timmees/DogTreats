@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
 
 # Zentrale Flask-Anwendung: definiert die Web-Routen, verbindet Templates mit Logik
@@ -353,9 +353,11 @@ def checkout():
         conn.commit()
         conn.close()
         cart_clear(session)
-        return redirect(url_for("manage_subscriptions"))
+        flash("Abo erfolgreich abgeschlossen", "success")
+        return redirect(url_for("index"))
 
     return render_template("checkout.html", items=items, total=total)
+
 
 
 
