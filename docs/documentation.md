@@ -38,7 +38,7 @@
   - `index.html` – Startseite
   - `base.html` – Layout-Template
   - `profile.html` – Login & Registrierung
-  - `plans.html` – Hund anlegen
+  - `plans.html` – Hund anlegen (später `create_dog.html`)
 
 ---
 
@@ -52,5 +52,47 @@
 - Implementierung des CSS-Designs für ein einheitliches Layout
 
 **Genutzte Ressourcen:**
-- [HTML Styles – CSS](https://www.w3schools.com/html/html_css.asp) – W3Schools, letzter Zugriff: 03.12.2025
+- [HTML Styles – CSS](https://www.w3schools.com/html/html_css.asp) – W3Schools, letzter Zugriff: 20.01.2026
 
+---
+
+## **11.12.2025**
+- Erstellung von neuen Routen -> Zwischenabgabe 
+- Implementierung folgender HTML-Templates:
+  - `create_dog.html` – Name, Hunderasse, Alter, Gewicht, Allergien/Besonderheiten
+  - `impressum.html` – Pseudo-Impressum
+  - `kontakt.html` – Pseudo-Kontakt
+  - `manage_subscriptions.html` – Platzhalter, später Abos verwalten
+  - `mydogs.html` – Platzhalter, später erstellte Hunde ansehen
+  - `order_history.html` – Platzhalter, später Bestellhistorie ansehen
+  - `track_orders.html` – Platzhalter, später Bestellungen verfolgen
+
+---
+
+## **02.01.2ß26**
+
+- Erstellte Hunde sowie alle Produkte sind jetzt in den jeweiligen HTML-Templates aufrufbar
+- Implementierung von neuem CSS-Designs
+- Implementierung folgender SQL-Dateien:
+  - `schema_products.sql` – Tabellen "categories" und products" angelegt
+  - `seed_products.html` – Tabelle "products" gefüllt
+- Implementierung folgender HTML-Templates:
+  - `all_products.html` – Einträge aus "products" werden angezeigt
+  - `mydogs.html` – erstellte Hunde werden jetzt angezeigt
+
+**Genutzte Ressourcen:**
+- [HTML Styles – CSS](https://www.w3schools.com/html/html_css.asp) – W3Schools, letzter Zugriff: 20.01.2026
+- [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template, ](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 03.01.2026
+- [Weiteres Tutorial für render_template mit Daten](https://www.digitalocean.com/community/tutorials/how-to-use-one-to-many-database-relationships-with-flask-and-sqlite) – digitalocean, letzter Zugriff: 03.01.2026
+
+---
+
+
+## **06.01.2026**
+
+
+
+
+
+
+ 
