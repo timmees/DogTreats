@@ -69,7 +69,7 @@
 
 ---
 
-## **02.01.2ß26**
+## **02.01.2026**
 
 - Erstellte Hunde sowie alle Produkte sind jetzt in den jeweiligen HTML-Templates aufrufbar
 - Implementierung von neuem CSS-Designs
@@ -82,17 +82,75 @@
 
 **Genutzte Ressourcen:**
 - [HTML Styles – CSS](https://www.w3schools.com/html/html_css.asp) – W3Schools, letzter Zugriff: 20.01.2026
-- [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template, ](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 03.01.2026
-- [Weiteres Tutorial für render_template mit Daten](https://www.digitalocean.com/community/tutorials/how-to-use-one-to-many-database-relationships-with-flask-and-sqlite) – digitalocean, letzter Zugriff: 03.01.2026
+- [CSS-Grid Layout](https://www.w3schools.com/css/css_grid.asp) – W3Schools, letzter Zugriff: 20.01.2026
+- [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template, ](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 10.01.2026
+- [Weiteres Tutorial für render_template mit Daten](https://www.digitalocean.com/community/tutorials/how-to-use-one-to-many-database-relationships-with-flask-and-sqlite) – digitalocean, letzter Zugriff: 10.01.2026
 
 ---
 
 
-## **06.01.2026**
+## **06.01.2026-10.01.2026**
+
+- Abo-Auswahl basierend auf Hund-Daten implementiert
+- POST-Request verarbeitet ausgewählten Hund
+- Berechnung von `grams_per_day` basierend auf Gewicht (20g pro kg)
+- Produktempfehlung abhängig von Allergien/Sensitivitäten 
+
+Implementierung folgender HTML-Templates:
+ - `plans_all.html` – Hunde Auswahl`<select>` Dropdown, Abo-Vorschläge
+ - `cart.html` - noch keine Logik
+
+**Genutzte Ressourcen:**
+- [Dropdown - Auswahl](https://csveda.com/flask-and-mysql-how-to-fill-table-data-in-a-dropdown/) – csveda, letzter Zugriff: 10.01.2026
+- [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template, ](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 10.01.2026
+- [Weiteres Tutorial für render_template mit Daten](https://www.digitalocean.com/community/tutorials/how-to-use-one-to-many-database-relationships-with-flask-and-sqlite) – digitalocean, letzter Zugriff: 10.01.2026
+- [HTML Styles – CSS](https://www.w3schools.com/html/html_css.asp) – W3Schools, letzter Zugriff: 20.01.2026
 
 
+## **15.01.2026**
+- Session-basierter Warenkorb implementiert - `cart.html`
+- Lieferinterval wird pro Warenkorb-Item in der Flask-Session gespeichert
+- Implementierung von `delivery_interval.html`
 
+**Genutzte Ressourcen:**
+- [Beispiel eines Warenkorbes mit Session](https://helperbyte.com/questions/12319/how-you-can-implement-a-shopping-cart-using-sessions-in-flask) – Hyperbyte, letzter Zugriff: 15.01.2026
 
+## **19.01.2026**
 
+- Abo-Features implementiert (hinzufügen, anzeigen, pausieren, löschen)
+- Warenkorb leeren
+- neue Struktur: Core-Features ausgelagert: Warenkorb (`cart_service.py`), Abo-Modell-Zusammenstellung (`plans_service.py`), Abo-Verwaltung (`subs_service.py`) -> `app.py` nur noch Routes mit dazugehöriger Logik
+- Abo-Zusammenstellung basierend auf Punktesystem, welches von Hund-Attributen abhängig ist
+- Implementierung von `checkout.html`
+
+**Genutzte Ressourcen:**
+- [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 03.01.2026
+
+---
+
+## **20.01.2026**
+- Vorschaubilder für Abo-Modelle implementiert
+
+**Genutzte Ressourcen:**
+-
+-
+-
+
+---
+
+## **21.01.2026**
+- kleine Verbesserungen (Code optimiert, Kommentare hinzugefügt)
+
+---
+
+## **04.02.2026**
+- Flash-Message Pop-Up, wenn Abo abgeschlossen wird
+- `profile.html`: Redesign mit vorhandener CSS-Klasse "product-Card" 
+
+**Genutzte Ressourcen:**
+- [Message Flashing](https://flask.palletsprojects.com/en/stable/patterns/flashing/) - flask.palletprojects, letzter Zugriff: 04.02.2026
+- [Flask Tutorial #6 - Message Flashing](https://www.youtube.com/watch?v=qbnqNWXf_tU) – Tech With Tim, letzter Zugriff: 04.02.2026
+
+---
 
  
