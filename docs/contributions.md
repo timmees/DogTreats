@@ -8,7 +8,7 @@
 - Track Order
 - Session-Logik
 - Datenbank-Logik
-
+- Powerpoint
 
 ## Tim Mees
 - Datenmodell -> SQLite
@@ -22,3 +22,4 @@
 - Documentation, .md Dateien, Github eingerichtet
 - PowerPoint erstellt
 - Flash-Nachrichten
+
