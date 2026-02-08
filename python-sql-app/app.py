@@ -465,7 +465,8 @@ def checkout():
     conn.close()
 
     cart_clear(session)
-    return redirect(url_for("order_history"))
+    flash("Bestellung erfolgreich abgeschlossen! Dein Abo ist nun aktiv.", "success")
+    return redirect(url_for("index"))
 
 
 @app.route("/subscriptions/<int:sub_id>/pause", methods=["POST"])
