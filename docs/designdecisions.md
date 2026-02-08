@@ -77,3 +77,24 @@ in Python: (`recommend_plans`).
 + Leicht anpassbar  
 
 ---
+## Design Decision 5: Eigenes CSS statt Bootstrap
+
+### Context  
+Die Anwendung soll übersichtlich und praktisch sein.
+
+### Decision  
+Verwendung von normalem, selbst geschriebenem CSS statt Bootstrap.
+
+### Consequences  
++ Volle Kontrolle über Design und Styling  
++ Keine externe Dependency  
++ Besseres Verständnis von CSS-Grundlagen  
+
+- Mehr eigener Aufwand für Layout & Responsiveness  
+
+### Alternatives Considered  
+**Bootstrap**  
++ Schnelles Prototyping  
++ Viele vorgefertigte Komponenten  
+- Weniger individuelles Design  
+- Zeitlich nicht mehr geschafft umzusetzen
