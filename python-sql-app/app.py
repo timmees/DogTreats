@@ -429,12 +429,16 @@ def checkout():
 
     total = sum(float(it["price"]) for it in items)
 
-    if request.method == "POST":
-        username = session["username"]
-        conn = get_db_connection()
-        cur = conn.cursor()
 
-    # 1) Abos speichern (wie bisher)
+    if request.method == "GET":
+        return render_template("checkout.html", items=items, total=total)
+
+  
+    username = session["username"]
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # 1) Abos speichern
     subs_create_from_cart(cur, username, items)
 
     # 2) Order speichern
@@ -444,7 +448,6 @@ def checkout():
     """, (username, total, "In Vorbereitung"))
     order_id = cur.lastrowid
 
-    # 3) Order-Items speichern (was bestellt wurde)
     for it in items:
         cur.execute("""
             INSERT INTO order_items
@@ -462,14 +465,7 @@ def checkout():
     conn.close()
 
     cart_clear(session)
-
-    # optional: direkt zu Bestellhistorie oder Abos verwalten
     return redirect(url_for("order_history"))
-
-
-    return render_template("checkout.html", items=items, total=total)
-
-
 
 
 @app.route("/subscriptions/<int:sub_id>/pause", methods=["POST"])
