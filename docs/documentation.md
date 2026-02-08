@@ -29,6 +29,7 @@
 - [Python and Flask – Routing and Variable Rules](https://www.youtube.com/watch?v=f085KDOy43k) – TheCodex, letzter Zugriff: 27.11.2025
 - [How to add Authentication to your App with Flask](https://www.geeksforgeeks.org/how-to-add-authentication-to-your-app-with-flask/) – GeeksforGeeks, letzter Zugriff: 02.12.2025
 - [Flask Python Registration doesn't work properly](https://stackoverflow.com/questions/40237394/flask-python-registration-doesnt-work-properly) – StackOverflow, letzter Zugriff: 02.12.2025
+- [How to generate dynamic urls in flask?](https://stackoverflow.com/questions/35107885/how-to-generate-dynamic-urls-in-flask) - StackOverflow, letzter Zugriff: 08.02.2026
 
 ---
 
@@ -131,11 +132,6 @@ Implementierung folgender HTML-Templates:
 ## **20.01.2026**
 - Vorschaubilder für Abo-Modelle implementiert
 
-**Genutzte Ressourcen:**
--
--
--
-
 ---
 
 ## **21.01.2026**
@@ -152,5 +148,26 @@ Implementierung folgender HTML-Templates:
 - [Flask Tutorial #6 - Message Flashing](https://www.youtube.com/watch?v=qbnqNWXf_tU) – Tech With Tim, letzter Zugriff: 04.02.2026
 
 ---
+## **08.02.2026**
 
- 
+- Simulierte Bestellverfolgung implementiert:
+  - Status-Updates basierend auf vergangener Zeit -> `order_date`
+  - Zeitbasierte Logik: `timedelta` und `.total_seconds()`
+  - 4 Status-Stufen:
+    - **In Vorbereitung** (0-24h nach Bestellung)
+    - **Versendet** (24-48h nach Bestellung)
+    - **Zustellung** (48-72h nach Bestellung)
+    - **Bestellung abgeschlossen** (72h+ nach Bestellung)
+  - Berechnung für Simulation: `hours_since_order = (now - order_date).total_seconds() / 3600`
+
+Aktuallisierung folgender HTML-Templates:
+- `Orders` – Bestellhistorie
+- `track_orders` – Zusammenfassung der Bestellung + Bestellfortschritt
+
+**Genutzte Ressourcen:**
+- [Python timedelta: Working With Time Intervals in Python](https://www.datacamp.com/tutorial/timedelta-python-time-intervals) - Stephen Gruppetta, letzter Zugriff: 08.02.2026
+- [datetime.timedelta() function - Python](https://www.geeksforgeeks.org/python/python-datetime-timedelta-function/) - geeksforgeeks, letzter Zugriff: 08.02.2026
+- [Convert Between Isoformat String and datetime in Python](https://note.nkmk.me/en/python-datetime-isoformat-fromisoformat/) - note.nkmk.me, letzter Zugriff: 08.02.2026
+- [Python DateTime Format Using Strftime()](https://pynative.com/python-datetime-format-strftime/) - pynative, letzter Zugriff: 08.02.2026
+
+---
