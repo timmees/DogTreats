@@ -1,6 +1,28 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>Bestellungen verfolgen</h1>
+<h1>Bestellung verfolgen</h1>
 
+<div class="product-card">
+  <h3>Bestellung #{{ order.id }}</h3>
+  <p><strong>Status:</strong> {{ order.status }}</p>
+  <p><strong>Versendet:</strong> {{ shipped_at }}</p>
+  <p><strong>Lieferung (ETA):</strong> {{ delivery_eta }}</p>
+
+  <h4 style="margin-top:1rem;">Inhalt</h4>
+  <ul>
+    {% for it in items %}
+      <li>{{ it.plan_title }} ({{ it.product_name }}) für {{ it.dog_name }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="product-card" style="margin-top:1rem;">
+  <p>● In Vorbereitung</p>
+  <p>{% if order.status in ['Versendet','Zugestellt'] %}●{% else %}○{% endif %} Versendet</p>
+  <p>{% if order.status == 'Zugestellt' %}●{% else %}○{% endif %} Zustellung</p>
+</div>
+
+<p style="margin-top:1rem;">
+  <a class="btn-secondary" href="{{ url_for('order_history') }}">Zurück zur Bestellhistorie</a>
+</p>
 {% endblock %}

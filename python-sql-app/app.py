@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
+from datetime import datetime, timedelta
 
 # Zentrale Flask-Anwendung: definiert die Web-Routen, verbindet Templates mit Logik
 # und koordiniert Datenbankzugriffe sowie Abo-, Warenkorb- und Nutzerfunktionen.
@@ -216,11 +217,66 @@ def mydogs():
     return render_template("mydogs.html", dogs=dogs)
 
 
-@app.route("/track_orders")
-def track_orders():
+@app.route("/track_orders/<int:order_id>")
+def track_orders(order_id):
     if "username" not in session:
         return redirect(url_for("profile"))
-    return render_template("track_orders.html")
+
+    username = session["username"]
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, order_date, status, total_price, shipped_at, delivery_eta
+        FROM orders
+        WHERE id = ? AND username = ?
+    """, (order_id, username))
+    order = cur.fetchone()
+
+    if not order:
+        conn.close()
+        return redirect(url_for("order_history"))
+
+    cur.execute("""
+        SELECT product_name, plan_title, dog_name, price
+        FROM order_items
+        WHERE order_id = ?
+    """, (order_id,))
+    items = cur.fetchall()
+
+    # Zeitbasis: Bestelldatum
+    base = datetime.now()
+    if order["order_date"]:
+        try:
+            base = datetime.fromisoformat(str(order["order_date"]))
+        except Exception:
+            pass
+
+    # shipped_at speichern falls leer
+    if not order["shipped_at"]:
+        shipped_dt = base + timedelta(hours=6)
+        cur.execute("UPDATE orders SET shipped_at = ? WHERE id = ?", (shipped_dt, order_id))
+    else:
+        shipped_dt = datetime.fromisoformat(str(order["shipped_at"]))
+
+    # delivery_eta speichern falls leer
+    if not order["delivery_eta"]:
+        delivery_dt = base + timedelta(days=2, hours=3)
+        cur.execute("UPDATE orders SET delivery_eta = ? WHERE id = ?", (delivery_dt, order_id))
+    else:
+        delivery_dt = datetime.fromisoformat(str(order["delivery_eta"]))
+
+    conn.commit()
+    conn.close()
+
+    return render_template(
+        "track_orders.html",
+        order=order,
+        items=items,
+        shipped_at=shipped_dt.strftime("%Y-%m-%d %H:%M"),
+        delivery_eta=delivery_dt.strftime("%Y-%m-%d %H:%M")
+    )
+
 
 
 @app.route("/orders")
