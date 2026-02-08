@@ -123,9 +123,11 @@ def create_dog():
         conn.commit()
         conn.close()
 
-        return redirect(url_for("create_dog")) #Nach dem Anlegen des Hundes zurück zum Formular 
+        flash("Hund erfolgreich angelegt!", "success")
+        
+        return redirect(url_for("index")) 
 
-    return render_template("create_dog.html") # rendert das Formular und schickt es an den Browser
+    return render_template("create_dog.html") 
 
 
 @app.route("/plans/all", methods=["GET", "POST"])
@@ -244,24 +246,44 @@ def track_orders(order_id):
     """, (order_id,))
     items = cur.fetchall()
 
-    # Zeitbasis: Bestelldatum
-    base = datetime.now()
+    #Bestelldatum
+    order_date = datetime.now()
     if order["order_date"]:
         try:
-            base = datetime.fromisoformat(str(order["order_date"]))
+            order_date = datetime.fromisoformat(str(order["order_date"]))
         except Exception:
             pass
 
+    # Berechne Zeit seit Bestellung
+    now = datetime.now()
+    hours_since_order = (now - order_date).total_seconds() / 3600
+
+    #Statusaktualisierung -> nur Simulation basierend auf vergangene Stunden
+    if hours_since_order < 24:
+        new_status = "In Vorbereitung"
+    elif hours_since_order < 48:
+        new_status = "Versendet"
+    elif hours_since_order < 72:
+        new_status = "Zustellung"
+    else:
+        new_status = "Bestellung abgeschlossen"
+
+    # Status in DB aktualisieren 
+    if order["status"] != new_status:
+        cur.execute("UPDATE orders SET status = ? WHERE id = ?", (new_status, order_id))
+        order = dict(order)  
+        order["status"] = new_status
+
     # shipped_at speichern falls leer
     if not order["shipped_at"]:
-        shipped_dt = base + timedelta(hours=6)
+        shipped_dt = order_date + timedelta(days=1)
         cur.execute("UPDATE orders SET shipped_at = ? WHERE id = ?", (shipped_dt, order_id))
     else:
         shipped_dt = datetime.fromisoformat(str(order["shipped_at"]))
 
     # delivery_eta speichern falls leer
     if not order["delivery_eta"]:
-        delivery_dt = base + timedelta(days=2, hours=3)
+        delivery_dt = order_date + timedelta(days=3)
         cur.execute("UPDATE orders SET delivery_eta = ? WHERE id = ?", (delivery_dt, order_id))
     else:
         delivery_dt = datetime.fromisoformat(str(order["delivery_eta"]))
@@ -276,8 +298,6 @@ def track_orders(order_id):
         shipped_at=shipped_dt.strftime("%Y-%m-%d %H:%M"),
         delivery_eta=delivery_dt.strftime("%Y-%m-%d %H:%M")
     )
-
-
 
 @app.route("/orders")
 def order_history():

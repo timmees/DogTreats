@@ -17,9 +17,11 @@
 </div>
 
 <div class="product-card" style="margin-top:1rem;">
-  <p>● In Vorbereitung</p>
-  <p>{% if order.status in ['Versendet','Zugestellt'] %}●{% else %}○{% endif %} Versendet</p>
-  <p>{% if order.status == 'Zugestellt' %}●{% else %}○{% endif %} Zustellung</p>
+  <h4>Bestellfortschritt</h4>
+  <p>{% if order.status in ['In Vorbereitung', 'Versendet', 'Zustellung', 'Bestellung abgeschlossen'] %}●{% else %}○{% endif %} In Vorbereitung</p>
+  <p>{% if order.status in ['Versendet', 'Zustellung', 'Bestellung abgeschlossen'] %}●{% else %}○{% endif %} Versendet</p>
+  <p>{% if order.status in ['Zustellung', 'Bestellung abgeschlossen'] %}●{% else %}○{% endif %} Zustellung</p>
+  <p>{% if order.status == 'Bestellung abgeschlossen' %}●{% else %}○{% endif %} Bestellung abgeschlossen</p>
 </div>
 
 <p style="margin-top:1rem;">
