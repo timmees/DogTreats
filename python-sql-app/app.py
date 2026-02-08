@@ -223,11 +223,39 @@ def track_orders():
     return render_template("track_orders.html")
 
 
-@app.route("/order_history")
+@app.route("/orders")
 def order_history():
     if "username" not in session:
         return redirect(url_for("profile"))
-    return render_template("order_history.html")
+
+    username = session["username"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Bestellungen laden
+    cur.execute("""
+        SELECT id, order_date, status, total_price
+        FROM orders
+        WHERE username = ?
+        ORDER BY order_date DESC
+    """, (username,))
+    orders = cur.fetchall()
+
+    # Inhalte je Bestellung laden
+    order_items = {}
+    for order in orders:
+        cur.execute("""
+            SELECT product_name, plan_title, dog_name, price
+            FROM order_items
+            WHERE order_id = ?
+        """, (order["id"],))
+        order_items[order["id"]] = cur.fetchall()
+
+    conn.close()
+
+    return render_template("orders.html", orders=orders, order_items=order_items)
+
 
 
 @app.route("/all_products")
@@ -349,12 +377,39 @@ def checkout():
         username = session["username"]
         conn = get_db_connection()
         cur = conn.cursor()
-        subs_create_from_cart(cur, username, items)
-        conn.commit()
-        conn.close()
-        cart_clear(session)
-        flash("Abo erfolgreich abgeschlossen", "success")
-        return redirect(url_for("index"))
+
+    # 1) Abos speichern (wie bisher)
+    subs_create_from_cart(cur, username, items)
+
+    # 2) Order speichern
+    cur.execute("""
+        INSERT INTO orders (username, total_price, status)
+        VALUES (?, ?, ?)
+    """, (username, total, "In Vorbereitung"))
+    order_id = cur.lastrowid
+
+    # 3) Order-Items speichern (was bestellt wurde)
+    for it in items:
+        cur.execute("""
+            INSERT INTO order_items
+            (order_id, product_name, plan_title, dog_name, price)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            order_id,
+            it.get("product_name"),
+            it.get("plan_title"),
+            it.get("dog_name"),
+            float(it.get("price", 0))
+        ))
+
+    conn.commit()
+    conn.close()
+
+    cart_clear(session)
+
+    # optional: direkt zu Bestellhistorie oder Abos verwalten
+    return redirect(url_for("order_history"))
+
 
     return render_template("checkout.html", items=items, total=total)
 

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Bestellhistorie</h1>
+
+{% if not orders %}
+  <p>Du hast noch keine Bestellungen.</p>
+{% else %}
+  {% for order in orders %}
+    <div class="product-card" style="margin-bottom:1rem;">
+      <h3>Bestellung vom {{ order.order_date }}</h3>
+      <p><strong>Status:</strong> {{ order.status }}</p>
+      <p><strong>Gesamt:</strong> {{ "%.2f"|format(order.total_price) }} €</p>
+
+      <p><strong>Inhalt:</strong></p>
+      <ul>
+        {% for it in order_items[order.id] %}
+          <li>{{ it.plan_title }} ({{ it.product_name }}) für {{ it.dog_name }}</li>
+        {% endfor %}
+      </ul>
+
+      <a class="btn-secondary" href="{{ url_for('track_orders', order_id=order.id) }}">
+        Bestellung verfolgen
+      </a>
+    </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}
