@@ -31,6 +31,9 @@
 - [Flask Python Registration doesn't work properly](https://stackoverflow.com/questions/40237394/flask-python-registration-doesnt-work-properly) – StackOverflow, letzter Zugriff: 02.12.2025
 - [How to generate dynamic urls in flask?](https://stackoverflow.com/questions/35107885/how-to-generate-dynamic-urls-in-flask) - StackOverflow, letzter Zugriff: 08.02.2026
 
+**Genutzte KI-Ressourcen**
+- [SQl Schema](https://chatgpt.com/share/6988da22-f44c-8002-9beb-05a6aba47153) (nicht so benutzt sondern abgewandelt)
+
 ---
 
 ## **27.11.2025**
@@ -87,6 +90,9 @@
 - [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template, ](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 10.01.2026
 - [Weiteres Tutorial für render_template mit Daten](https://www.digitalocean.com/community/tutorials/how-to-use-one-to-many-database-relationships-with-flask-and-sqlite) – digitalocean, letzter Zugriff: 10.01.2026
 
+**Genutzte KI-Ressourcen:**
+- [Beispielprojekt](https://chatgpt.com/share/6988d87b-3270-8002-a4f6-d2e4dad51a3d) 
+
 ---
 
 
@@ -116,7 +122,7 @@ Implementierung folgender HTML-Templates:
 **Genutzte Ressourcen:**
 - [Beispiel eines Warenkorbes mit Session](https://helperbyte.com/questions/12319/how-you-can-implement-a-shopping-cart-using-sessions-in-flask) – Hyperbyte, letzter Zugriff: 15.01.2026
 
-## **19.01.2026**
+## **19.01.2026-20.01.206**
 
 - Abo-Features implementiert (hinzufügen, anzeigen, pausieren, löschen)
 - Warenkorb leeren
@@ -127,6 +133,8 @@ Implementierung folgender HTML-Templates:
 **Genutzte Ressourcen:**
 - [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 03.01.2026
 
+**Genutzte KI-Ressourcen:**
+-[Route-Example](https://chatgpt.com/share/6988e0fe-b968-8002-bebe-f941a6f300d7)
 ---
 
 ## **20.01.2026**
@@ -169,5 +177,8 @@ Aktuallisierung folgender HTML-Templates:
 - [datetime.timedelta() function - Python](https://www.geeksforgeeks.org/python/python-datetime-timedelta-function/) - geeksforgeeks, letzter Zugriff: 08.02.2026
 - [Convert Between Isoformat String and datetime in Python](https://note.nkmk.me/en/python-datetime-isoformat-fromisoformat/) - note.nkmk.me, letzter Zugriff: 08.02.2026
 - [Python DateTime Format Using Strftime()](https://pynative.com/python-datetime-format-strftime/) - pynative, letzter Zugriff: 08.02.2026
+
+**Genutzte KI-Quellen**
+-[Code-Optimisation in plans_service.py](https://claude.ai/share/e13dc79c-d8e1-4c43-b343-8f5e124f90d3) 
 
 ---
