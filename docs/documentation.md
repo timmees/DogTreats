@@ -134,7 +134,8 @@ Implementierung folgender HTML-Templates:
 - [SQLite-Setup, INSERT INTO, cur.execute, fetchall(), render_template](https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application) – digitalocean, letzter Zugriff: 03.01.2026
 
 **Genutzte KI-Ressourcen:**
--[Route-Example](https://chatgpt.com/share/6988e0fe-b968-8002-bebe-f941a6f300d7)
+- [Route-Example](https://chatgpt.com/share/6988e0fe-b968-8002-bebe-f941a6f300d7)
+
 ---
 
 ## **20.01.2026**
@@ -179,6 +180,7 @@ Aktuallisierung folgender HTML-Templates:
 - [Python DateTime Format Using Strftime()](https://pynative.com/python-datetime-format-strftime/) - pynative, letzter Zugriff: 08.02.2026
 
 **Genutzte KI-Quellen**
--[Code-Optimisation in plans_service.py](https://claude.ai/share/e13dc79c-d8e1-4c43-b343-8f5e124f90d3) 
+- [Code-Optimisation in plans_service.py](https://claude.ai/share/e13dc79c-d8e1-4c43-b343-8f5e124f90d3) 
 
 ---
+
